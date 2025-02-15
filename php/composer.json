@@ -1,0 +1,22 @@
+{
+  "name": "carlos/organise",
+  "description": "Apenas para tratar de BDs temporarias, unitir instituicoes, cargos, leis e seed de deputados",
+  "type": "metapackage",
+  "require": {
+    "guzzlehttp/guzzle": "^7.9",
+    "doctrine/dbal": "^3.0"
+  },
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Carlos\\Organise\\": "src/",
+      "Carlos\\Organise\\Migration\\": "models/",
+      "Carlos\\Organise\\Lib\\": "lib/"
+    }
+  },
+  "authors": [
+    {
+      "name": "CarlosLiberJesus <bewhy.org@gmail.com>"
+    }
+  ]
+}
