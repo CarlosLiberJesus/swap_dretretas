@@ -1,5 +1,5 @@
 {
-  "name": "carlos/organise",
+  "name": "carlos/organize",
   "description": "Apenas para tratar de BDs temporarias, unitir instituicoes, cargos, leis e seed de deputados",
   "type": "metapackage",
   "require": {
@@ -9,9 +9,11 @@
   "license": "MIT",
   "autoload": {
     "psr-4": {
-      "Carlos\\Organise\\": "src/",
-      "Carlos\\Organise\\Migration\\": "models/",
-      "Carlos\\Organise\\Lib\\": "lib/"
+      "Carlos\\Organize\\": "src/",
+      "Carlos\\Organize\\Model\\": "models/",
+      "Carlos\\Organize\\Model\\Laravel\\": "models/Laravel/",
+      "Carlos\\Organize\\Model\\Tretas\\": "models/Tretas/",
+      "Carlos\\Organize\\Lib\\": "lib/"
     }
   },
   "authors": [

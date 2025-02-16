@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Models;
+namespace Carlos\Organize\Model\Laravel;
 
 
 class Instituicao {
