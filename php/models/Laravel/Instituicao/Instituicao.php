@@ -18,43 +18,28 @@ class Instituicao
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(
-        int $id,
-        string $uuid,
-        int $republicaId,
-        string $nome,
-        ?string $sigla,
-        ?string $sinopse,
-        ?int $respondeInstituicaoId,
-        ?int $entidadeJuridicaId,
-        bool $nacional
-    ) {
-        $this->id = $id;
-        $this->uuid = $uuid;
-        $this->republicaId = $republicaId;
-        $this->nome = $nome;
-        $this->sigla = $sigla;
-        $this->sinopse = $sinopse;
-        $this->respondeInstituicaoId = $respondeInstituicaoId;
-        $this->entidadeJuridicaId = $entidadeJuridicaId;
-        $this->nacional = $nacional;
+    public function __construct()
+    {
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        return new self(
-            $data['id'],
-            $data['uuid'],
-            $data['republica_id'],
-            $data['nome'],
-            $data['sigla'] ?? null,
-            $data['sinopse'] ?? null,
-            $data['responde_instituicao_id'] ?? null,
-            $data['entidade_juridica_id'] ?? null,
-            (bool) $data['nacional']
-        );
+        $instance = new self();
+        $instance->id = $data['id'] ?? null;
+        $instance->uuid = $data['uuid'] ?? null;
+        $instance->republicaId = $data['republica_id'] ?? null;
+        $instance->nome = $data['nome'] ?? null;
+        $instance->sigla = $data['sigla'] ?? null;
+        $instance->sinopse = $data['sinopse'] ?? null;
+        $instance->respondeInstituicaoId = $data['responde_instituicao_id'] ?? null;
+        $instance->entidadeJuridicaId = $data['entidade_juridica_id'] ?? null;
+        $instance->nacional = $data['nacional'] ?? null;
+        $instance->createdAt = $data['created_at'] ?? $instance->createdAt;
+        $instance->updatedAt = $data['updated_at'] ?? $instance->updatedAt;
+
+        return $instance;
     }
 
     public static function findById(\PDO $pdo, int $id): ?self
@@ -97,6 +82,117 @@ class Instituicao
             $this->createdAt,
             $this->updatedAt
         );
+    }
+
+    // Getters and Setters
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getUuid(): ?string
+    {
+        return $this->uuid;
+    }
+
+    public function getRepublicaId(): ?int
+    {
+        return $this->republicaId;
+    }
+
+    public function getNome(): ?string
+    {
+        return $this->nome;
+    }
+
+    public function getSigla(): ?string
+    {
+        return $this->sigla;
+    }
+
+    public function getSinopse(): ?string
+    {
+        return $this->sinopse;
+    }
+
+    public function getRespondeInstituicaoId(): ?int
+    {
+        return $this->respondeInstituicaoId;
+    }
+
+    public function getEntidadeJuridicaId(): ?int
+    {
+        return $this->entidadeJuridicaId;
+    }
+
+    public function isNacional(): ?bool
+    {
+        return $this->nacional;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setUuid(string $uuid): void
+    {
+        $this->uuid = $uuid;
+    }
+
+    public function setRepublicaId(int $republicaId): void
+    {
+        $this->republicaId = $republicaId;
+    }
+
+    public function setNome(string $nome): void
+    {
+        $this->nome = $nome;
+    }
+
+    public function setSigla(?string $sigla): void
+    {
+        $this->sigla = $sigla;
+    }
+
+    public function setSinopse(?string $sinopse): void
+    {
+        $this->sinopse = $sinopse;
+    }
+
+    public function setRespondeInstituicaoId(?int $respondeInstituicaoId): void
+    {
+        $this->respondeInstituicaoId = $respondeInstituicaoId;
+    }
+
+    public function setEntidadeJuridicaId(?int $entidadeJuridicaId): void
+    {
+        $this->entidadeJuridicaId = $entidadeJuridicaId;
+    }
+
+    public function setNacional(bool $nacional): void
+    {
+        $this->nacional = $nacional;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 
     // Método para buscar os ramos relacionados
@@ -199,5 +295,33 @@ class Instituicao
         }
 
         return null;
+    }
+
+    // Método para buscar as legislaturas relacionadas
+    public function legislaturas(\PDO $pdo): array
+    {
+        $stmt = $pdo->prepare("SELECT * FROM instituicao_legislaturas WHERE instituicao_id = ?");
+        $stmt->execute([$this->id]);
+        $legislaturas = [];
+
+        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $legislaturas[] = InstituicaoLegislatura::create($data);
+        }
+
+        return $legislaturas;
+    }
+
+    // Método para buscar as presidenciais relacionadas
+    public function presidenciais(\PDO $pdo): array
+    {
+        $stmt = $pdo->prepare("SELECT * FROM instituicao_presidenciais WHERE instituicao_id = ?");
+        $stmt->execute([$this->id]);
+        $presidenciais = [];
+
+        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $presidenciais[] = InstituicaoPresidencial::create($data);
+        }
+
+        return $presidenciais;
     }
 }

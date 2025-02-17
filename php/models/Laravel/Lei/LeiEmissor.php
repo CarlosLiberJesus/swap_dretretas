@@ -66,4 +66,55 @@ class LeiEmissor
             $this->updatedAt
         );
     }
+
+    // Getters and Setters
+    public function getLeiId(): int
+    {
+        return $this->leiId;
+    }
+
+    public function getEmissorTipo(): string
+    {
+        return $this->emissorTipo;
+    }
+
+    public function getEmissorId(): int
+    {
+        return $this->emissorId;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setLeiId(int $leiId): void
+    {
+        $this->leiId = $leiId;
+    }
+
+    public function setEmissorTipo(string $emissorTipo): void
+    {
+        $this->emissorTipo = $emissorTipo;
+    }
+
+    public function setEmissorId(int $emissorId): void
+    {
+        $this->emissorId = $emissorId;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
 }

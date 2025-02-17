@@ -13,18 +13,23 @@ class DiarioRepublica
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(string $uuid, string $nome, string $publicacao)
+    public function __construct()
     {
-        $this->uuid = $uuid;
-        $this->nome = $nome;
-        $this->publicacao = $publicacao;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        return new self($data['uuid'], $data['nome'], $data['publicacao']);
+        $instance = new self();
+        $instance->id = $data['id'] ?? null;
+        $instance->uuid = $data['uuid'] ?? null;
+        $instance->nome = $data['nome'] ?? null;
+        $instance->publicacao = $data['publicacao'] ?? null;
+        $instance->createdAt = $data['created_at'] ?? $instance->createdAt;
+        $instance->updatedAt = $data['updated_at'] ?? $instance->updatedAt;
+
+        return $instance;
     }
 
     public static function findById(\PDO $pdo, int $id): ?self
@@ -62,5 +67,66 @@ class DiarioRepublica
             $this->createdAt,
             $this->updatedAt
         );
+    }
+
+    // Getters and Setters
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getUuid(): ?string
+    {
+        return $this->uuid;
+    }
+
+    public function getNome(): ?string
+    {
+        return $this->nome;
+    }
+
+    public function getPublicacao(): ?string
+    {
+        return $this->publicacao;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setUuid(string $uuid): void
+    {
+        $this->uuid = $uuid;
+    }
+
+    public function setNome(string $nome): void
+    {
+        $this->nome = $nome;
+    }
+
+    public function setPublicacao(string $publicacao): void
+    {
+        $this->publicacao = $publicacao;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

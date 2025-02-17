@@ -70,4 +70,17 @@ class InstituicaoPresidencial
             $this->updatedAt
         );
     }
+
+    public function anexos(\PDO $pdo): array
+    {
+        $stmt = $pdo->prepare("SELECT * FROM instituicao_presidencial_anexos WHERE instituicao_presidencial_id = ?");
+        $stmt->execute([$this->id]);
+        $anexos = [];
+
+        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $anexos[] = InstituicaoAnexo::create($data);
+        }
+
+        return $anexos;
+    }
 }

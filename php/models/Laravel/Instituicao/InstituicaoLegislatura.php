@@ -70,4 +70,17 @@ class InstituicaoLegislatura
             $this->updatedAt
         );
     }
+
+    public function anexos(\PDO $pdo): array
+    {
+        $stmt = $pdo->prepare("SELECT * FROM instituicao_legislatura_anexos WHERE instituicao_legislatura_id = ?");
+        $stmt->execute([$this->id]);
+        $anexos = [];
+
+        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $anexos[] = InstituicaoAnexo::create($data);
+        }
+
+        return $anexos;
+    }
 }

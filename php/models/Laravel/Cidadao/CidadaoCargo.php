@@ -75,4 +75,17 @@ class CidadaoCargo
             $this->updatedAt
         );
     }
+
+    public function anexos(\PDO $pdo): array
+    {
+        $stmt = $pdo->prepare("SELECT * FROM cidadao_cargo_anexos WHERE cidadao_id = ? AND cargo_id = ?");
+        $stmt->execute([$this->id, $this->cargoId]);
+        $anexos = [];
+
+        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $anexos[] = CidadaoCargoAnexo::create($data);
+        }
+
+        return $anexos;
+    }
 }

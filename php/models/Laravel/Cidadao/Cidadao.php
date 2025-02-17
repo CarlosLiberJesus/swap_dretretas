@@ -16,22 +16,26 @@ class Cidadao
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(string $uuid, string $nome, bool $nacional)
+    public function __construct()
     {
-        $this->uuid = $uuid;
-        $this->nome = $nome;
-        $this->nacional = $nacional;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        $cidadao = new self($data['uuid'], $data['nome'], $data['nacional']);
-        $cidadao->dataNascimento = $data['data_nascimento'] ?? null;
-        $cidadao->dataFalecimento = $data['data_falecimento'] ?? null;
-        $cidadao->freguesiaId = $data['freguesia_id'] ?? null;
-        return $cidadao;
+        $instance = new self();
+        $instance->id = $data['id'] ?? null;
+        $instance->uuid = $data['uuid'] ?? null;
+        $instance->nome = $data['nome'] ?? null;
+        $instance->dataNascimento = $data['data_nascimento'] ?? null;
+        $instance->dataFalecimento = $data['data_falecimento'] ?? null;
+        $instance->freguesiaId = $data['freguesia_id'] ?? null;
+        $instance->nacional = $data['nacional'] ?? null;
+        $instance->createdAt = $data['created_at'] ?? $instance->createdAt;
+        $instance->updatedAt = $data['updated_at'] ?? $instance->updatedAt;
+
+        return $instance;
     }
 
     public static function findByUuid(\PDO $pdo, string $uuid): ?self
@@ -72,5 +76,179 @@ class Cidadao
             $this->createdAt,
             $this->updatedAt
         );
+    }
+
+    // Getters and Setters
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getUuid(): ?string
+    {
+        return $this->uuid;
+    }
+
+    public function getNome(): ?string
+    {
+        return $this->nome;
+    }
+
+    public function getDataNascimento(): ?string
+    {
+        return $this->dataNascimento;
+    }
+
+    public function getDataFalecimento(): ?string
+    {
+        return $this->dataFalecimento;
+    }
+
+    public function getFreguesiaId(): ?int
+    {
+        return $this->freguesiaId;
+    }
+
+    public function isNacional(): ?bool
+    {
+        return $this->nacional;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setUuid(string $uuid): void
+    {
+        $this->uuid = $uuid;
+    }
+
+    public function setNome(string $nome): void
+    {
+        $this->nome = $nome;
+    }
+
+    public function setDataNascimento(?string $dataNascimento): void
+    {
+        $this->dataNascimento = $dataNascimento;
+    }
+
+    public function setDataFalecimento(?string $dataFalecimento): void
+    {
+        $this->dataFalecimento = $dataFalecimento;
+    }
+
+    public function setFreguesiaId(?int $freguesiaId): void
+    {
+        $this->freguesiaId = $freguesiaId;
+    }
+
+    public function setNacional(bool $nacional): void
+    {
+        $this->nacional = $nacional;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    // Método para buscar a nacionalidade relacionada
+    public function nacionalidade(\PDO $pdo): ?CidadaoNacionalidade
+    {
+        $stmt = $pdo->prepare("SELECT * FROM cidadao_nacionalidades WHERE cidadao_id = ?");
+        $stmt->execute([$this->id]);
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($data) {
+            return CidadaoNacionalidade::create($data);
+        }
+
+        return null;
+    }
+
+    public function anexos(\PDO $pdo): array
+    {
+        $stmt = $pdo->prepare("SELECT * FROM cidadao_anexos WHERE cidadao_id = ?");
+        $stmt->execute([$this->id]);
+        $anexos = [];
+
+        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $anexos[] = CidadaoAnexo::create($data);
+        }
+
+        return $anexos;
+    }
+
+    // Método para buscar o contacto relacionado
+    public function contacto(\PDO $pdo): ?CidadaoContacto
+    {
+        $stmt = $pdo->prepare("SELECT * FROM cidadao_contactos WHERE cidadao_id = ?");
+        $stmt->execute([$this->id]);
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($data) {
+            return CidadaoContacto::create($data);
+        }
+
+        return null;
+    }
+
+    // Método para buscar o contacto relacionado
+    public function dados(\PDO $pdo): ?CidadaoDados
+    {
+        $stmt = $pdo->prepare("SELECT * FROM cidadao_dados WHERE cidadao_id = ?");
+        $stmt->execute([$this->id]);
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($data) {
+            return CidadaoDados::create($data);
+        }
+
+        return null;
+    }
+
+    // Método para buscar o contacto relacionado
+    public function morada(\PDO $pdo): ?CidadaoMorada
+    {
+        $stmt = $pdo->prepare("SELECT * FROM cidadao_moradas WHERE cidadao_id = ?");
+        $stmt->execute([$this->id]);
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($data) {
+            return CidadaoMorada::create($data);
+        }
+
+        return null;
+    }
+
+    // Método para buscar as relações relacionadas
+    public function relacoes(\PDO $pdo): array
+    {
+        $stmt = $pdo->prepare("SELECT * FROM cidadao_relacoes WHERE cidadao_id = ?");
+        $stmt->execute([$this->id]);
+        $relacoes = [];
+
+        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $relacoes[] = CidadaoRelacao::create($data);
+        }
+
+        return $relacoes;
     }
 }

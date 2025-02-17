@@ -14,20 +14,24 @@ class DiarioRepublicaPublicacaoLei
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(int $drPublicacaoId, int $leiId, string $paginas)
+    public function __construct()
     {
-        $this->drPublicacaoId = $drPublicacaoId;
-        $this->leiId = $leiId;
-        $this->paginas = $paginas;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        $publicacaoLei = new self($data['dr_publicacao_id'], $data['lei_id'], $data['paginas']);
-        $publicacaoLei->src = $data['src'] ?? null;
-        return $publicacaoLei;
+        $instance = new self();
+        $instance->id = $data['id'] ?? null;
+        $instance->drPublicacaoId = $data['dr_publicacao_id'] ?? null;
+        $instance->leiId = $data['lei_id'] ?? null;
+        $instance->src = $data['src'] ?? null;
+        $instance->paginas = $data['paginas'] ?? null;
+        $instance->createdAt = $data['created_at'] ?? $instance->createdAt;
+        $instance->updatedAt = $data['updated_at'] ?? $instance->updatedAt;
+
+        return $instance;
     }
 
     public static function findById(\PDO $pdo, int $id): ?self
@@ -66,5 +70,76 @@ class DiarioRepublicaPublicacaoLei
             $this->createdAt,
             $this->updatedAt
         );
+    }
+
+    // Getters and Setters
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getDrPublicacaoId(): ?int
+    {
+        return $this->drPublicacaoId;
+    }
+
+    public function getLeiId(): ?int
+    {
+        return $this->leiId;
+    }
+
+    public function getSrc(): ?string
+    {
+        return $this->src;
+    }
+
+    public function getPaginas(): ?string
+    {
+        return $this->paginas;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setDrPublicacaoId(int $drPublicacaoId): void
+    {
+        $this->drPublicacaoId = $drPublicacaoId;
+    }
+
+    public function setLeiId(int $leiId): void
+    {
+        $this->leiId = $leiId;
+    }
+
+    public function setSrc(?string $src): void
+    {
+        $this->src = $src;
+    }
+
+    public function setPaginas(string $paginas): void
+    {
+        $this->paginas = $paginas;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

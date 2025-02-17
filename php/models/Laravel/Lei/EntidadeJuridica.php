@@ -13,22 +13,23 @@ class EntidadeJuridica
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(string $nome, ?string $descricao = null, ?string $params = null)
+    public function __construct()
     {
-        $this->nome = $nome;
-        $this->descricao = $descricao;
-        $this->params = $params;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        return new self(
-            $data['nome'],
-            $data['descricao'] ?? null,
-            $data['params'] ?? null
-        );
+        $instance = new self();
+        $instance->id = $data['id'] ?? null;
+        $instance->nome = $data['nome'] ?? null;
+        $instance->descricao = $data['descricao'] ?? null;
+        $instance->params = $data['params'] ?? null;
+        $instance->createdAt = $data['created_at'] ?? $instance->createdAt;
+        $instance->updatedAt = $data['updated_at'] ?? $instance->updatedAt;
+
+        return $instance;
     }
 
     public static function findById(\PDO $pdo, int $id): ?self
@@ -66,5 +67,94 @@ class EntidadeJuridica
             $this->createdAt,
             $this->updatedAt
         );
+    }
+
+    // Getters and Setters
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getNome(): ?string
+    {
+        return $this->nome;
+    }
+
+    public function getDescricao(): ?string
+    {
+        return $this->descricao;
+    }
+
+    public function getParams(): ?string
+    {
+        return $this->params;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setNome(string $nome): void
+    {
+        $this->nome = $nome;
+    }
+
+    public function setDescricao(?string $descricao): void
+    {
+        $this->descricao = $descricao;
+    }
+
+    public function setParams(?string $params): void
+    {
+        $this->params = $params;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    // Método para buscar os anexos relacionados
+    public function anexos(\PDO $pdo): array
+    {
+        $stmt = $pdo->prepare("SELECT * FROM entidade_juridica_anexos WHERE entidades_juridica_id = ?");
+        $stmt->execute([$this->id]);
+        $anexos = [];
+
+        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $anexos[] = EntidadeJuridicaAnexo::create($data);
+        }
+
+        return $anexos;
+    }
+
+    // Método para buscar os anexos relacionados
+    public function leis(\PDO $pdo): array
+    {
+        $stmt = $pdo->prepare("SELECT * FROM entidade_juridica_leis WHERE entidades_juridica_id = ?");
+        $stmt->execute([$this->id]);
+        $anexos = [];
+
+        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $anexos[] = EntidadeJuridicaLei::create($data);
+        }
+
+        return $anexos;
     }
 }

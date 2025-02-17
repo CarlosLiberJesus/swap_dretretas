@@ -15,20 +15,23 @@ class EntidadeJuridicaLei
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(string $uuid, ?string $nome, int $entidadeJuridicaId, Lei $lei)
+    public function __construct()
     {
-        $this->uuid = $uuid;
-        $this->nome = $nome;
-        $this->entidadeJuridicaId = $entidadeJuridicaId;
-        $this->lei = $lei;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
-    public static function create(\PDO $pdo, array $data): self
+    public static function create(array $data): self
     {
-        $lei = Lei::findById($pdo, $data['lei_id']);
-        return new self($data['uuid'], $data['nome'] ?? null, $data['entidade_juridica_id'], $lei);
+        $instance = new self();
+        $instance->uuid = $data['uuid'] ?? null;
+        $instance->nome = $data['nome'] ?? null;
+        $instance->entidadeJuridicaId = $data['entidade_juridica_id'] ?? null;
+        $instance->lei = Lei::findById($data['lei_id']);
+        $instance->createdAt = $data['created_at'] ?? $instance->createdAt;
+        $instance->updatedAt = $data['updated_at'] ?? $instance->updatedAt;
+
+        return $instance;
     }
 
     public static function findByUuid(\PDO $pdo, string $uuid): ?self
@@ -38,7 +41,7 @@ class EntidadeJuridicaLei
         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         if ($data) {
-            return self::create($pdo, $data);
+            return self::create($data);
         }
 
         return null;
@@ -50,7 +53,7 @@ class EntidadeJuridicaLei
         $leis = [];
 
         while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $leis[] = self::create($pdo, $data);
+            $leis[] = self::create($data);
         }
 
         return $leis;
@@ -67,5 +70,66 @@ class EntidadeJuridicaLei
             $this->createdAt,
             $this->updatedAt
         );
+    }
+
+    // Getters and Setters
+    public function getUuid(): ?string
+    {
+        return $this->uuid;
+    }
+
+    public function getNome(): ?string
+    {
+        return $this->nome;
+    }
+
+    public function getEntidadeJuridicaId(): ?int
+    {
+        return $this->entidadeJuridicaId;
+    }
+
+    public function getLei(): ?Lei
+    {
+        return $this->lei;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUuid(string $uuid): void
+    {
+        $this->uuid = $uuid;
+    }
+
+    public function setNome(?string $nome): void
+    {
+        $this->nome = $nome;
+    }
+
+    public function setEntidadeJuridicaId(int $entidadeJuridicaId): void
+    {
+        $this->entidadeJuridicaId = $entidadeJuridicaId;
+    }
+
+    public function setLei(Lei $lei): void
+    {
+        $this->lei = $lei;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

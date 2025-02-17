@@ -74,4 +74,85 @@ class LeiAnexo
             $this->updatedAt
         );
     }
+
+    // Getters and Setters
+    public function getUuid(): ?string
+    {
+        return $this->uuid;
+    }
+
+    public function getNome(): ?string
+    {
+        return $this->nome;
+    }
+
+    public function getLeiId(): ?int
+    {
+        return $this->leiId;
+    }
+
+    public function getAnexoTipoId(): ?int
+    {
+        return $this->anexoTipoId;
+    }
+
+    public function getPath(): ?string
+    {
+        return $this->path;
+    }
+
+    public function getSrc(): ?string
+    {
+        return $this->src;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUuid(string $uuid): void
+    {
+        $this->uuid = $uuid;
+    }
+
+    public function setNome(string $nome): void
+    {
+        $this->nome = $nome;
+    }
+
+    public function setLeiId(int $leiId): void
+    {
+        $this->leiId = $leiId;
+    }
+
+    public function setAnexoTipoId(int $anexoTipoId): void
+    {
+        $this->anexoTipoId = $anexoTipoId;
+    }
+
+    public function setPath(?string $path): void
+    {
+        $this->path = $path;
+    }
+
+    public function setSrc(?string $src): void
+    {
+        $this->src = $src;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
 }

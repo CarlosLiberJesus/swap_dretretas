@@ -4,33 +4,29 @@ declare(strict_types=1);
 
 namespace Carlos\Organize\Model\Laravel\Lei;
 
-class DiarioRepublicaSerie
+class LeiAdenda
 {
-    private $id;
-    private $nome;
-    private $sinopse;
-    private $serieId;
+    private $leiOriginalId;
+    private $leiAdendaId;
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(string $nome, string $sinopse)
+    public function __construct(int $leiOriginalId, int $leiAdendaId)
     {
-        $this->nome = $nome;
-        $this->sinopse = $sinopse;
+        $this->leiOriginalId = $leiOriginalId;
+        $this->leiAdendaId = $leiAdendaId;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        $serie = new self($data['nome'], $data['sinopse']);
-        $serie->serieId = $data['serie_id'] ?? null;
-        return $serie;
+        return new self($data['lei_original_id'], $data['lei_adenda_id']);
     }
 
     public static function findById(\PDO $pdo, int $id): ?self
     {
-        $stmt = $pdo->prepare("SELECT * FROM diario_republica_series WHERE id = ?");
+        $stmt = $pdo->prepare("SELECT * FROM lei_adendas WHERE id = ?");
         $stmt->execute([$id]);
         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
 
@@ -43,25 +39,65 @@ class DiarioRepublicaSerie
 
     public static function all(\PDO $pdo): array
     {
-        $stmt = $pdo->query("SELECT * FROM diario_republica_series");
-        $series = [];
+        $stmt = $pdo->query("SELECT * FROM lei_adendas");
+        $adendas = [];
 
         while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $series[] = self::create($data);
+            $adendas[] = self::create($data);
         }
 
-        return $series;
+        return $adendas;
     }
 
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO diario_republica_series (nome, sinopse, serie_id, created_at, updated_at) VALUES ('%s', '%s', %s, '%s', '%s')",
-            $this->nome,
-            $this->sinopse,
-            $this->serieId !== null ? $this->serieId : "NULL",
+            "INSERT INTO lei_adendas (lei_original_id, lei_adenda_id, created_at, updated_at) VALUES (%d, %d, '%s', '%s')",
+            $this->leiOriginalId,
+            $this->leiAdendaId,
             $this->createdAt,
             $this->updatedAt
         );
+    }
+
+    // Getters and Setters
+    public function getLeiOriginalId(): int
+    {
+        return $this->leiOriginalId;
+    }
+
+    public function getLeiAdendaId(): int
+    {
+        return $this->leiAdendaId;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setLeiOriginalId(int $leiOriginalId): void
+    {
+        $this->leiOriginalId = $leiOriginalId;
+    }
+
+    public function setLeiAdendaId(int $leiAdendaId): void
+    {
+        $this->leiAdendaId = $leiAdendaId;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

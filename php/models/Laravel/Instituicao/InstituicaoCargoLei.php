@@ -8,17 +8,15 @@ use Carlos\Organize\Model\Laravel\Lei;
 
 class InstituicaoCargoLei
 {
-    private $uuid;
-    private $nome;
+    private $id;
     private $instituicaoCargoId;
     private $leiId;
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(string $uuid, string $nome, int $instituicaoCargoId, int $leiId)
+    public function __construct(int $id, int $instituicaoCargoId, int $leiId)
     {
-        $this->uuid = $uuid;
-        $this->nome = $nome;
+        $this->id = $id;
         $this->instituicaoCargoId = $instituicaoCargoId;
         $this->leiId = $leiId;
         $this->createdAt = date('Y-m-d H:i:s');
@@ -28,16 +26,15 @@ class InstituicaoCargoLei
     public static function create(array $data): self
     {
         return new self(
-            $data['uuid'],
-            $data['nome'],
+            $data['id'],
             $data['instituicao_cargo_id'],
             $data['lei_id']
         );
     }
 
-    public static function findByUuid(\PDO $pdo, string $uuid): ?self
+    public static function findByInstituicaoCargoId(\PDO $pdo, int $id): ?self
     {
-        $stmt = $pdo->prepare("SELECT * FROM instituicao_cargo_leis WHERE uuid = ?");
+        $stmt = $pdo->prepare("SELECT * FROM instituicao_cargo_leis WHERE instituicao_cargo_id = ?");
         $stmt->execute([$uuid]);
         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
 
@@ -45,6 +42,17 @@ class InstituicaoCargoLei
             return self::create($data);
         }
 
+        return null;
+    }
+
+    public static function findByLeiId(\PDO $pdo, int $id): ?self
+    {
+        $stmt = $pdo->prepare("SELECT * FROM instituicao_cargo_leis WHERE lei_id = ?");
+        $stmt->execute([$id]);
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+        if ($data) {
+            return self::create($data);
+        }
         return null;
     }
 
@@ -63,9 +71,7 @@ class InstituicaoCargoLei
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO instituicao_cargo_leis (uuid, nome, instituicao_cargo_id, lei_id, created_at, updated_at) VALUES ('%s', '%s', %d, %d, '%s', '%s')",
-            $this->uuid,
-            $this->nome,
+            "INSERT INTO instituicao_cargo_leis (instituicao_cargo_id, lei_id, created_at, updated_at) VALUES (%d, %d, '%s', '%s')",
             $this->instituicaoCargoId,
             $this->leiId,
             $this->createdAt,

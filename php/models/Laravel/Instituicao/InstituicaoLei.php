@@ -5,17 +5,14 @@ namespace Carlos\Organize\Model\Laravel\Instituicao;
 class InstituicaoLei
 {
     private $id;
-    private $uuid;
-    private $nome;
     private $instituicaoId;
     private $leiId;
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(string $uuid, string $nome, int $instituicaoId, int $leiId)
+    public function __construct(int $id, string $uuid, string $nome, int $instituicaoId, int $leiId)
     {
-        $this->uuid = $uuid;
-        $this->nome = $nome;
+        $this->id = $id;
         $this->instituicaoId = $instituicaoId;
         $this->leiId = $leiId;
         $this->createdAt = date('Y-m-d H:i:s');
@@ -24,13 +21,35 @@ class InstituicaoLei
 
     public static function create(array $data): self
     {
-        $lei = new self($data['uuid'], $data['nome'], $data['instituicao_id'], $data['lei_id']);
+        $lei = new self($data['id'], $data['instituicao_id'], $data['lei_id']);
         return $lei;
     }
 
     public static function findById(\PDO $pdo, int $id): ?self
     {
         $stmt = $pdo->prepare("SELECT * FROM instituicao_leis WHERE id = ?");
+        $stmt->execute([$id]);
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+        if ($data) {
+            return self::create($data);
+        }
+        return null;
+    }
+
+    public static function findByInstituicaoId(\PDO $pdo, int $id): ?self
+    {
+        $stmt = $pdo->prepare("SELECT * FROM instituicao_leis WHERE instituicao_id = ?");
+        $stmt->execute([$id]);
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+        if ($data) {
+            return self::create($data);
+        }
+        return null;
+    }
+
+    public static function findByLeiId(\PDO $pdo, int $id): ?self
+    {
+        $stmt = $pdo->prepare("SELECT * FROM instituicao_leis WHERE lei_id = ?");
         $stmt->execute([$id]);
         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
         if ($data) {

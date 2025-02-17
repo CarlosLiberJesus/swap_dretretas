@@ -59,4 +59,45 @@ class LeiAdenda
             $this->updatedAt
         );
     }
+
+    // Getters and Setters
+    public function getLeiOriginalId(): int
+    {
+        return $this->leiOriginalId;
+    }
+
+    public function getLeiAdendaId(): int
+    {
+        return $this->leiAdendaId;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setLeiOriginalId(int $leiOriginalId): void
+    {
+        $this->leiOriginalId = $leiOriginalId;
+    }
+
+    public function setLeiAdendaId(int $leiAdendaId): void
+    {
+        $this->leiAdendaId = $leiAdendaId;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
 }

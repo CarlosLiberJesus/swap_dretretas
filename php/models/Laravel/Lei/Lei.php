@@ -19,51 +19,29 @@ class Lei
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(
-        int $id,
-        string $uuid,
-        string $codigo,
-        string $nomeCompleto,
-        ?string $proponente,
-        ?string $sumario,
-        ?string $texto,
-        ?string $path,
-        bool $emVigor,
-        ?string $dataToggle
-    ) {
-        $this->id = $id;
-        $this->uuid = $uuid;
-        $this->codigo = $codigo;
-        $this->nomeCompleto = $nomeCompleto;
-        $this->proponente = $proponente;
-        $this->sumario = $sumario;
-        $this->texto = $texto;
-        $this->path = $path;
-        $this->emVigor = $emVigor;
-        $this->dataToggle = $dataToggle;
+    public function __construct()
+    {
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
     public static function create(array $data): self
     {
-        return new self(
-            $data['id'],
-            $data['uuid'],
-            $data['codigo'],
-            $data['nome_completo'],
-            $data['proponente'] ?? null,
-            $data['sumario'] ?? null,
-            $data['texto'] ?? null,
-            $data['path'] ?? null,
-            (bool) $data['em_vigor'],
-            $data['data_toggle'] ?? null
-        );
+        $instance = new self();
+        $instance->id = $data['id'] ?? null;
+        $instance->uuid = $data['uuid'] ?? null;
+        $instance->codigo = $data['codigo'] ?? null;
+        $instance->nomeCompleto = $data['nome_completo'] ?? null;
+        $instance->proponente = $data['proponente'] ?? null;
+        $instance->sumario = $data['sumario'] ?? null;
+        $instance->texto = $data['texto'] ?? null;
+        $instance->path = $data['path'] ?? null;
+        $instance->emVigor = $data['em_vigor'] ?? null;
+        $instance->dataToggle = $data['data_toggle'] ?? null;
+        $instance->createdAt = $data['created_at'] ?? $instance->createdAt;
+        $instance->updatedAt = $data['updated_at'] ?? $instance->updatedAt;
+
+        return $instance;
     }
 
     public static function findById(\PDO $pdo, int $id): ?self
@@ -108,7 +86,139 @@ class Lei
             $this->updatedAt
         );
     }
+
+    // Getters and Setters
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getUuid(): ?string
+    {
+        return $this->uuid;
+    }
+
+    public function getCodigo(): ?string
+    {
+        return $this->codigo;
+    }
+
+    public function getNomeCompleto(): ?string
+    {
+        return $this->nomeCompleto;
+    }
+
+    public function getProponente(): ?string
+    {
+        return $this->proponente;
+    }
+
+    public function getSumario(): ?string
+    {
+        return $this->sumario;
+    }
+
+    public function getTexto(): ?string
+    {
+        return $this->texto;
+    }
+
+    public function getPath(): ?string
+    {
+        return $this->path;
+    }
+
+    public function isEmVigor(): ?bool
+    {
+        return $this->emVigor;
+    }
+
+    public function getDataToggle(): ?string
+    {
+        return $this->dataToggle;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setUuid(string $uuid): void
+    {
+        $this->uuid = $uuid;
+    }
+
+    public function setCodigo(string $codigo): void
+    {
+        $this->codigo = $codigo;
+    }
+
+    public function setNomeCompleto(string $nomeCompleto): void
+    {
+        $this->nomeCompleto = $nomeCompleto;
+    }
+
+    public function setProponente(?string $proponente): void
+    {
+        $this->proponente = $proponente;
+    }
+
+    public function setSumario(?string $sumario): void
+    {
+        $this->sumario = $sumario;
+    }
+
+    public function setTexto(?string $texto): void
+    {
+        $this->texto = $texto;
+    }
+
+    public function setPath(?string $path): void
+    {
+        $this->path = $path;
+    }
+
+    public function setEmVigor(bool $emVigor): void
+    {
+        $this->emVigor = $emVigor;
+    }
+
+    public function setDataToggle(?string $dataToggle): void
+    {
+        $this->dataToggle = $dataToggle;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    // Método para buscar os anexos relacionados
+    public function anexos(\PDO $pdo): array
+    {
+        $stmt = $pdo->prepare("SELECT * FROM lei_anexos WHERE lei_id = ?");
+        $stmt->execute([$this->id]);
+        $anexos = [];
+
+        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $anexos[] = LeiAnexo::create($data);
+        }
+
+        return $anexos;
+    }
 }
-
-
-
