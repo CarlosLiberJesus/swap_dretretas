@@ -15,7 +15,7 @@ $finalBDHandler = new MigrationHandler($finalBDPdo);
 $importBDPdo = new \PDO("mysql:host=localhost;dbname=python_dre", "local_user", "Qwerty.123");
 $importBDHandler = new MigrationHandler($importBDPdo);
 
-if($finalBDHandler->testConnection('diario_republicas') && $importBDHandler->testConnection('dreapp_document')) {
+if ($finalBDHandler->testConnection('diario_republicas') && $importBDHandler->testConnection('dreapp_document')) {
     echo "Conexão com as bases de dados estabelecida\n";
 
     //$res = $importBDHandler->getDReDocuments("SELECT * FROM `dreapp_document` WHERE date < '1910-10-05' ORDER BY date ASC;");
@@ -23,6 +23,17 @@ if($finalBDHandler->testConnection('diario_republicas') && $importBDHandler->tes
 
     foreach ($res as $dreDocument) {
         echo $dreDocument->generateContent();
+
+
+        /**
+         * $pdo->beginTransaction();
+         * try {
+         *    $pdo->exec($this->toSqlInsert());
+         *    $pdo->commit();
+         *} catch (\Exception $e) {
+         *    $pdo->rollBack();
+         *    throw $e;
+         */
 
         echo "Deseja continuar? (s/n): ";
         $handle = fopen("php://stdin", "r");
