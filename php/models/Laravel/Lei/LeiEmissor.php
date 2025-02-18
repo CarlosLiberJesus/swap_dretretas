@@ -6,28 +6,30 @@ namespace Carlos\Organize\Model\Laravel\Lei;
 
 class LeiEmissor
 {
+    private $id;
     private $leiId;
     private $emissorTipo;
     private $emissorId;
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(int $leiId, string $emissorTipo, int $emissorId)
+    public function __construct(int $id)
     {
-        $this->leiId = $leiId;
-        $this->emissorTipo = $emissorTipo;
-        $this->emissorId = $emissorId;
+        $this->id = $id;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        return new self(
-            $data['lei_id'],
-            $data['emissor_tipo'],
-            $data['emissor_id']
-        );
+        $instance = new self($data['id'] ?? 0);
+        $instance->leiId = $data['lei_id'] ?? null;
+        $instance->emissorTipo = $data['emissor_tipo'] ?? null;
+        $instance->emissorId = $data['emissor_id'] ?? null;
+        $instance->createdAt = $data['created_at'] ?? $instance->createdAt;
+        $instance->updatedAt = $data['updated_at'] ?? $instance->updatedAt;
+
+        return $instance;
     }
 
     public static function findById(\PDO $pdo, int $id): ?self
@@ -58,7 +60,8 @@ class LeiEmissor
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO lei_emissores (lei_id, emissor_tipo, emissor_id, created_at, updated_at) VALUES (%d, '%s', %d, '%s', '%s')",
+            "INSERT INTO lei_emissores (id, lei_id, emissor_tipo, emissor_id, created_at, updated_at) VALUES (%d, %d, '%s', %d, '%s', '%s')",
+            $this->id,
             $this->leiId,
             $this->emissorTipo,
             $this->emissorId,
@@ -68,17 +71,22 @@ class LeiEmissor
     }
 
     // Getters and Setters
-    public function getLeiId(): int
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getLeiId(): ?int
     {
         return $this->leiId;
     }
 
-    public function getEmissorTipo(): string
+    public function getEmissorTipo(): ?string
     {
         return $this->emissorTipo;
     }
 
-    public function getEmissorId(): int
+    public function getEmissorId(): ?int
     {
         return $this->emissorId;
     }
@@ -91,6 +99,11 @@ class LeiEmissor
     public function getUpdatedAt(): string
     {
         return $this->updatedAt;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     public function setLeiId(int $leiId): void

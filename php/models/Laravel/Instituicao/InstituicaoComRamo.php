@@ -66,4 +66,55 @@ class InstituicaoComRamo
     {
         return InstituicaoRamo::findById($pdo, $this->instituicaoRamoId);
     }
+
+    // Getters and Setters
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getInstituicaoId(): int
+    {
+        return $this->instituicaoId;
+    }
+
+    public function getInstituicaoRamoId(): int
+    {
+        return $this->instituicaoRamoId;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setInstituicaoId(int $instituicaoId): void
+    {
+        $this->instituicaoId = $instituicaoId;
+    }
+
+    public function setInstituicaoRamoId(int $instituicaoRamoId): void
+    {
+        $this->instituicaoRamoId = $instituicaoRamoId;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
 }

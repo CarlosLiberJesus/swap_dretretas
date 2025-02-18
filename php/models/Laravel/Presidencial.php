@@ -57,4 +57,27 @@ class Presidencial
             self::create(['id' => 7, 'uuid' => '', 'republica_id' => 4, 'eleicoes' => '2016-01-24', 'posse' => '09-03-2016']),
         ];
     }
+
+    public static function getByNome(string $nome): ?self
+    {
+        $presidenciais = self::all();
+        foreach ($presidenciais as $presidencial) {
+            if (stripos($presidencial->nome, $nome) !== false) {
+                return $presidencial;
+            }
+        }
+        return null;
+    }
+
+    public static function getDistinctNome(): array
+    {
+        $presidenciais = self::all();
+        $distinctNome = [];
+        foreach ($presidenciais as $presidencial) {
+            if (!in_array($presidencial->nome, $distinctNome)) {
+                $distinctNome[] = $presidencial->nome;
+            }
+        }
+        return $distinctNome;
+    }
 }

@@ -35,7 +35,7 @@ class InstituicaoCargoLei
     public static function findByInstituicaoCargoId(\PDO $pdo, int $id): ?self
     {
         $stmt = $pdo->prepare("SELECT * FROM instituicao_cargo_leis WHERE instituicao_cargo_id = ?");
-        $stmt->execute([$uuid]);
+        $stmt->execute([$id]);
         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         if ($data) {

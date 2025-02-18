@@ -14,16 +14,16 @@ class DiarioRepublicaPublicacaoLei
     private $createdAt;
     private $updatedAt;
 
-    public function __construct()
+    public function __construct(int $id)
     {
+        $this->id = $id;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        $instance = new self();
-        $instance->id = $data['id'] ?? null;
+        $instance = new self($data['id'] ?? 0);
         $instance->drPublicacaoId = $data['dr_publicacao_id'] ?? null;
         $instance->leiId = $data['lei_id'] ?? null;
         $instance->src = $data['src'] ?? null;
@@ -62,7 +62,8 @@ class DiarioRepublicaPublicacaoLei
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO diario_republica_publicacao_leis (dr_publicacao_id, lei_id, src, paginas, created_at, updated_at) VALUES (%d, %d, %s, '%s', '%s', '%s')",
+            "INSERT INTO diario_republica_publicacao_leis (id, dr_publicacao_id, lei_id, src, paginas, created_at, updated_at) VALUES (%d, %d, %d, %s, '%s', '%s', '%s')",
+            $this->id,
             $this->drPublicacaoId,
             $this->leiId,
             $this->src !== null ? "'" . $this->src . "'" : "NULL",

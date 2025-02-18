@@ -10,23 +10,23 @@ class AnexoTipo
     public $tipo;
     public $description;
     public $params;
+    public $createdAt;
+    public $updatedAt;
 
-    public function __construct(int $id, string $tipo, string $description, ?string $params = null)
+    public function __construct(int $id)
     {
         $this->id = $id;
-        $this->tipo = $tipo;
-        $this->description = $description;
-        $this->params = $params;
+        $this->createdAt = date('Y-m-d H:i:s');
+        $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        return new self(
-            $data['id'] ?? null,
-            $data['tipo'],
-            $data['description'],
-            $data['params'] ?? null
-        );
+        $anexoTipo = new self($data['id'] ?? 0);
+        $anexoTipo->tipo = $data['tipo'];
+        $anexoTipo->description = $data['description'];
+        $anexoTipo->params = $data['params'];
+        return $anexoTipo;
     }
 
     public static function all(): array
@@ -52,5 +52,28 @@ class AnexoTipo
         }
 
         return null;
+    }
+
+    public static function getAnexoTipo(string $tipo, string $description): ?self
+    {
+        $anexos = self::all();
+        foreach ($anexos as $anexo) {
+            if ($anexo->tipo === $tipo && stripos($anexo->description, $description) !== false) {
+                return $anexo;
+            }
+        }
+        return null;
+    }
+
+    public static function getDistinctTipo(): array
+    {
+        $anexos = self::all();
+        $distinctTipo = [];
+        foreach ($anexos as $anexo) {
+            if (!in_array($anexo->tipo, $distinctTipo)) {
+                $distinctTipo[] = $anexo->tipo;
+            }
+        }
+        return $distinctTipo;
     }
 }

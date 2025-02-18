@@ -6,6 +6,7 @@ namespace Carlos\Organize\Model\Laravel\Lei;
 
 class LeiAnexo
 {
+    private $id;
     private $uuid;
     private $nome;
     private $leiId;
@@ -15,24 +16,39 @@ class LeiAnexo
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(string $uuid, string $nome, int $leiId, int $anexoTipoId)
+    public function __construct(int $id)
     {
-        $this->uuid = $uuid;
-        $this->nome = $nome;
-        $this->leiId = $leiId;
-        $this->anexoTipoId = $anexoTipoId;
+        $this->id = $id;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        return new self(
-            $data['uuid'],
-            $data['nome'],
-            $data['lei_id'],
-            $data['anexo_tipo_id']
-        );
+        $instance = new self($data['id'] ?? 0);
+        $instance->uuid = $data['uuid'] ?? null;
+        $instance->nome = $data['nome'] ?? null;
+        $instance->leiId = $data['lei_id'] ?? null;
+        $instance->anexoTipoId = $data['anexo_tipo_id'] ?? null;
+        $instance->path = $data['path'] ?? null;
+        $instance->src = $data['src'] ?? null;
+        $instance->createdAt = $data['created_at'] ?? $instance->createdAt;
+        $instance->updatedAt = $data['updated_at'] ?? $instance->updatedAt;
+
+        return $instance;
+    }
+
+    public static function findById(\PDO $pdo, int $id): ?self
+    {
+        $stmt = $pdo->prepare("SELECT * FROM lei_anexos WHERE id = ?");
+        $stmt->execute([$id]);
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($data) {
+            return self::create($data);
+        }
+
+        return null;
     }
 
     public static function findByUuid(\PDO $pdo, string $uuid): ?self
@@ -46,6 +62,31 @@ class LeiAnexo
         }
 
         return null;
+    }
+
+    public static function findByNome(\PDO $pdo, string $nome): ?self
+    {
+        $stmt = $pdo->prepare("SELECT * FROM lei_anexos WHERE nome LIKE ?");
+        $stmt->execute(['%' . $nome . '%']);
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($data) {
+            return self::create($data);
+        }
+
+        return null;
+    }
+
+    public static function getDistinctNome(\PDO $pdo): array
+    {
+        $stmt = $pdo->query("SELECT DISTINCT nome FROM lei_anexos");
+        $nomes = [];
+
+        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $nomes[] = $data['nome'];
+        }
+
+        return $nomes;
     }
 
     public static function all(\PDO $pdo): array
@@ -76,6 +117,11 @@ class LeiAnexo
     }
 
     // Getters and Setters
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
     public function getUuid(): ?string
     {
         return $this->uuid;
@@ -114,6 +160,11 @@ class LeiAnexo
     public function getUpdatedAt(): string
     {
         return $this->updatedAt;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     public function setUuid(string $uuid): void

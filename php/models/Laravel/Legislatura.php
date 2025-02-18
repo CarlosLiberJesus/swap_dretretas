@@ -75,4 +75,27 @@ class Legislatura
             self::create(['id' => 17, 'uuid' => '', 'code' => 'XVI', 'nome' => 'Assembleia da República', 'republica_id' => 4, 'eleicoes' => '2026-10-01', 'formacao' => '2024-03-26', 'dissolucao' => null]),
         ];
     }
+
+    public static function getByNome(string $nome): ?self
+    {
+        $legislaturas = self::all();
+        foreach ($legislaturas as $legislatura) {
+            if (stripos($legislatura->nome, $nome) !== false) {
+                return $legislatura;
+            }
+        }
+        return null;
+    }
+
+    public static function getDistinctNome(): array
+    {
+        $legislaturas = self::all();
+        $distinctNome = [];
+        foreach ($legislaturas as $legislatura) {
+            if (!in_array($legislatura->nome, $distinctNome)) {
+                $distinctNome[] = $legislatura->nome;
+            }
+        }
+        return $distinctNome;
+    }
 }

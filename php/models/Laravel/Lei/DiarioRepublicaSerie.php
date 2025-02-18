@@ -4,71 +4,76 @@ declare(strict_types=1);
 
 namespace Carlos\Organize\Model\Laravel\Lei;
 
-class LeiAdenda
+class DiarioRepublicaSerie
 {
-    private $leiOriginalId;
-    private $leiAdendaId;
+    private $id;
+    private $nome;
+    private $sinopse;
+    private $serieId;
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(int $leiOriginalId, int $leiAdendaId)
+    public function __construct(int $id)
     {
-        $this->leiOriginalId = $leiOriginalId;
-        $this->leiAdendaId = $leiAdendaId;
+        $this->id = $id;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        return new self($data['lei_original_id'], $data['lei_adenda_id']);
+        $instance = new self($data['id'] ?? 0);
+        $instance->nome = $data['nome'];
+        $instance->sinopse = $data['sinopse'];
+        $instance->serieId = $data['serie_id'] ?? null;
+        $instance->createdAt = $data['created_at'] ?? $instance->createdAt;
+        $instance->updatedAt = $data['updated_at'] ?? $instance->updatedAt;
+
+        return $instance;
     }
 
-    public static function findById(\PDO $pdo, int $id): ?self
+    public static function all(): array
     {
-        $stmt = $pdo->prepare("SELECT * FROM lei_adendas WHERE id = ?");
-        $stmt->execute([$id]);
-        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return [
+            self::create(['id' => 1, 'nome' => 'I Série', 'sinopse' => 'Relato fiel e completo do que ocorrer em cada reunião plenária.']),
+            self::create(['id' => 2, 'nome' => 'II Série-A', 'sinopse' => 'Textos dos decretos, resoluções e deliberações do Plenário, da Comissão Permanente, da Mesa e da Conferência de Líderes, dos projetos de revisão constitucional.']),
+            self::create(['id' => 3, 'nome' => 'II Série-B', 'sinopse' => 'Textos dos votos, interpelações, inquéritos parlamentares e requerimentos de apreciação de decretos-leis.']),
+            self::create(['id' => 4, 'nome' => 'II Série-C', 'sinopse' => 'Relatórios da atividade das comissões parlamentares nos termos do Regimento.']),
+            self::create(['id' => 5, 'nome' => 'II Série-D', 'sinopse' => 'Intervenções feitas por Deputados, em representação da Assembleia da República, em organizações internacionais, designadamente na União Interparlamentar.']),
+            self::create(['id' => 6, 'nome' => 'II Série-E', 'sinopse' => 'Despachos do Presidente da Assembleia e dos Vice-Presidentes.']),
+        ];
+    }
 
-        if ($data) {
-            return self::create($data);
+    public static function findByNome(string $nome): ?self
+    {
+        $series = self::all();
+        foreach ($series as $serie) {
+            if (stripos($serie->nome, $nome) !== false) {
+                return $serie;
+            }
         }
-
         return null;
     }
 
-    public static function all(\PDO $pdo): array
-    {
-        $stmt = $pdo->query("SELECT * FROM lei_adendas");
-        $adendas = [];
-
-        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $adendas[] = self::create($data);
-        }
-
-        return $adendas;
-    }
-
-    public function toSqlInsert(): string
-    {
-        return sprintf(
-            "INSERT INTO lei_adendas (lei_original_id, lei_adenda_id, created_at, updated_at) VALUES (%d, %d, '%s', '%s')",
-            $this->leiOriginalId,
-            $this->leiAdendaId,
-            $this->createdAt,
-            $this->updatedAt
-        );
-    }
-
     // Getters and Setters
-    public function getLeiOriginalId(): int
+    public function getId(): ?int
     {
-        return $this->leiOriginalId;
+        return $this->id;
     }
 
-    public function getLeiAdendaId(): int
+    public function getNome(): ?string
     {
-        return $this->leiAdendaId;
+        return $this->nome;
+    }
+
+    public function getSinopse(): ?string
+    {
+        return $this->sinopse;
+    }
+
+    public function getSerieId(): ?int
+    {
+        return $this->serieId;
     }
 
     public function getCreatedAt(): string
@@ -81,14 +86,24 @@ class LeiAdenda
         return $this->updatedAt;
     }
 
-    public function setLeiOriginalId(int $leiOriginalId): void
+    public function setId(int $id): void
     {
-        $this->leiOriginalId = $leiOriginalId;
+        $this->id = $id;
     }
 
-    public function setLeiAdendaId(int $leiAdendaId): void
+    public function setNome(string $nome): void
     {
-        $this->leiAdendaId = $leiAdendaId;
+        $this->nome = $nome;
+    }
+
+    public function setSinopse(string $sinopse): void
+    {
+        $this->sinopse = $sinopse;
+    }
+
+    public function setSerieId(?int $serieId): void
+    {
+        $this->serieId = $serieId;
     }
 
     public function setCreatedAt(string $createdAt): void

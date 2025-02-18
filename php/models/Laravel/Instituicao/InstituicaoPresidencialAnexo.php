@@ -6,6 +6,7 @@ use Carlos\Organize\Model\Laravel\AnexoTipo;
 
 class InstituicaoPresidencialAnexo
 {
+    private $id;
     private $uuid;
     private $nome;
     private $instituicaoPresidencialId;
@@ -15,8 +16,9 @@ class InstituicaoPresidencialAnexo
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(string $uuid, string $nome, int $instituicaoPresidencialId, AnexoTipo $anexoTipo)
+    public function __construct(int $id, string $uuid, string $nome, int $instituicaoPresidencialId, AnexoTipo $anexoTipo)
     {
+        $this->id = $id;
         $this->uuid = $uuid;
         $this->nome = $nome;
         $this->instituicaoPresidencialId = $instituicaoPresidencialId;
@@ -28,7 +30,7 @@ class InstituicaoPresidencialAnexo
     public static function create(array $data): self
     {
         $anexoTipo = AnexoTipo::findById($data['anexo_tipo_id']);
-        $anexo = new self($data['uuid'], $data['nome'], $data['instituicao_presidencial_id'], $anexoTipo);
+        $anexo = new self($data['id'], $data['uuid'], $data['nome'], $data['instituicao_presidencial_id'], $anexoTipo);
         $anexo->path = $data['path'] ?? null;
         $anexo->src = $data['src'] ?? null;
         return $anexo;
@@ -58,7 +60,8 @@ class InstituicaoPresidencialAnexo
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO instituicao_presidencial_anexos (uuid, nome, instituicao_presidencial_id, anexo_tipo_id, path, src, created_at, updated_at) VALUES ('%s', '%s', %d, %d, %s, %s, '%s', '%s')",
+            "INSERT INTO instituicao_presidencial_anexos (id, uuid, nome, instituicao_presidencial_id, anexo_tipo_id, path, src, created_at, updated_at) VALUES (%d, '%s', '%s', %d, %d, %s, %s, '%s', '%s')",
+            $this->id,
             $this->uuid,
             $this->nome,
             $this->instituicaoPresidencialId,
@@ -68,5 +71,96 @@ class InstituicaoPresidencialAnexo
             $this->createdAt,
             $this->updatedAt
         );
+    }
+
+    // Getters and Setters
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getUuid(): string
+    {
+        return $this->uuid;
+    }
+
+    public function getNome(): string
+    {
+        return $this->nome;
+    }
+
+    public function getInstituicaoPresidencialId(): int
+    {
+        return $this->instituicaoPresidencialId;
+    }
+
+    public function getAnexoTipo(): AnexoTipo
+    {
+        return $this->anexoTipo;
+    }
+
+    public function getPath(): ?string
+    {
+        return $this->path;
+    }
+
+    public function getSrc(): ?string
+    {
+        return $this->src;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setUuid(string $uuid): void
+    {
+        $this->uuid = $uuid;
+    }
+
+    public function setNome(string $nome): void
+    {
+        $this->nome = $nome;
+    }
+
+    public function setInstituicaoPresidencialId(int $instituicaoPresidencialId): void
+    {
+        $this->instituicaoPresidencialId = $instituicaoPresidencialId;
+    }
+
+    public function setAnexoTipo(AnexoTipo $anexoTipo): void
+    {
+        $this->anexoTipo = $anexoTipo;
+    }
+
+    public function setPath(?string $path): void
+    {
+        $this->path = $path;
+    }
+
+    public function setSrc(?string $src): void
+    {
+        $this->src = $src;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

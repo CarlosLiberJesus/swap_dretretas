@@ -15,16 +15,16 @@ class DiarioRepublicaPublicacao
     private $createdAt;
     private $updatedAt;
 
-    public function __construct()
+    public function __construct(int $id)
     {
+        $this->id = $id;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        $instance = new self();
-        $instance->id = $data['id'] ?? null;
+        $instance = new self($data['id'] ?? 0);
         $instance->uuid = $data['uuid'] ?? null;
         $instance->nome = $data['nome'] ?? null;
         $instance->src = $data['src'] ?? null;
@@ -49,6 +49,19 @@ class DiarioRepublicaPublicacao
         return null;
     }
 
+    public static function findByNome(\PDO $pdo, string $nome): ?self
+    {
+        $stmt = $pdo->prepare("SELECT * FROM diario_republica_publicacoes WHERE nome LIKE ?");
+        $stmt->execute(['%' . $nome . '%']);
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($data) {
+            return self::create($data);
+        }
+
+        return null;
+    }
+
     public static function all(\PDO $pdo): array
     {
         $stmt = $pdo->query("SELECT * FROM diario_republica_publicacoes");
@@ -64,7 +77,8 @@ class DiarioRepublicaPublicacao
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO diario_republica_publicacoes (uuid, nome, src, diario_republica_id, serie_id, created_at, updated_at) VALUES ('%s', '%s', %s, %d, %d, '%s', '%s')",
+            "INSERT INTO diario_republica_publicacoes (id, uuid, nome, src, diario_republica_id, serie_id, created_at, updated_at) VALUES (%d, '%s', '%s', %s, %d, %d, '%s', '%s')",
+            $this->id,
             $this->uuid,
             $this->nome,
             $this->src !== null ? "'" . $this->src . "'" : "NULL",

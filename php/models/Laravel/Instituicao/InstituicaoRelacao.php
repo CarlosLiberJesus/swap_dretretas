@@ -1,7 +1,10 @@
 <?php declare(strict_types=1);
 
 namespace Carlos\Organize\Model\Laravel\Instituicao;
+
 use Carlos\Organize\Model\Laravel\RelacaoTipo;
+use Carlos\Organize\Model\Laravel\Cidadao\Cidadao;
+
 
 class InstituicaoRelacao
 {
@@ -17,96 +20,6 @@ class InstituicaoRelacao
     {
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function getInstituicaoId(): int
-    {
-        return $this->instituicaoId;
-    }
-
-    public function getInstituicao(\PDO $pdo): ?Instituicao
-    {
-        return Instituicao::findById($pdo, $this->instituicaoId);
-    }
-
-    public function getComInstituicaoId(): ?int
-    {
-        return $this->comInstituicaoId;
-    }
-
-    public function getComInstituicao(\PDO $pdo): ?Instituicao
-    {
-        return Instituicao::findById($pdo, $this->comInstituicaoId);
-    }
-
-    public function getComCidadaoId(): ?int
-    {
-        return $this->comCidadaoId;
-    }
-
-    public function getComCidadao(\PDO $pdo): ?Cidadao
-    {
-        return Cidadao::findById($pdo, $this->comCidadaoId);
-    }
-
-    public function getRelacaoTipoId(): int
-    {
-        return $this->relacaoTipoId;
-    }
-
-    public function getRelacaoTipo(\PDO $pdo): ?RelacaoTipo
-    {
-        return RelacaoTipo::findById($pdo, $this->relacaoTipoId);
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function setInstituicaoId(int $id): void
-    {
-        $this->instituicaoId = $id;
-    }
-
-    public function setInstituicao(Instituicao $instituicao): void
-    {
-        $this->instituicaoId = $instituicao->getId();
-    }
-
-    public function setComInstituicaoId(?int $id): void
-    {
-        $this->comInstituicaoId = $id;
-    }
-
-    public function setRelacaoTipo(RelacaoTipo $relacaoTipo): void
-    {
-        $this->relacaoTipoId = $relacaoTipo->getId();
-    }
-
-    public function setRelacaoTipoId(int $id): void
-    {
-        $this->relacaoTipoId = $id;
-    }
-
-    public function setComInstituicao(?Instituicao $instituicao): void
-    {
-        $this->comInstituicaoId = $instituicao->getId();
-    }
-
-    public function setComCidadaoId(?int $id): void
-    {
-        $this->comCidadaoId = $id;
-    }
-
-    public function setComCidadao(?Cidadao $cidadao): void
-    {
-        $this->comCidadaoId = $cidadao->getId();
     }
 
     public static function create(array $data): self
@@ -152,5 +65,96 @@ class InstituicaoRelacao
             $this->createdAt,
             $this->updatedAt
         );
+    }
+
+    // Getters and Setters
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getInstituicaoId(): int
+    {
+        return $this->instituicaoId;
+    }
+
+    public function getInstituicao(\PDO $pdo): ?Instituicao
+    {
+        return Instituicao::findById($pdo, $this->instituicaoId);
+    }
+
+    public function getComInstituicaoId(): ?int
+    {
+        return $this->comInstituicaoId;
+    }
+
+    public function getComInstituicao(\PDO $pdo): ?Instituicao
+    {
+        return Instituicao::findById($pdo, $this->comInstituicaoId);
+    }
+
+    public function getComCidadaoId(): ?int
+    {
+        return $this->comCidadaoId;
+    }
+
+    public function getComCidadao(\PDO $pdo): ?Cidadao
+    {
+        return Cidadao::findById($pdo, $this->comCidadaoId);
+    }
+
+    public function getRelacaoTipoId(): int
+    {
+        return $this->relacaoTipoId;
+    }
+
+    public function getRelacaoTipo(): ?RelacaoTipo
+    {
+        return RelacaoTipo::getById($this->relacaoTipoId);
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setInstituicaoId(int $id): void
+    {
+        $this->instituicaoId = $id;
+    }
+
+    public function setInstituicao(Instituicao $instituicao): void
+    {
+        $this->instituicaoId = $instituicao->getId();
+    }
+
+    public function setComInstituicaoId(?int $id): void
+    {
+        $this->comInstituicaoId = $id;
+    }
+
+    public function setRelacaoTipo(RelacaoTipo $relacaoTipo): void
+    {
+        $this->relacaoTipoId = $relacaoTipo->id;
+    }
+
+    public function setRelacaoTipoId(int $id): void
+    {
+        $this->relacaoTipoId = $id;
+    }
+
+    public function setComInstituicao(?Instituicao $instituicao): void
+    {
+        $this->comInstituicaoId = $instituicao->getId();
+    }
+
+    public function setComCidadaoId(?int $id): void
+    {
+        $this->comCidadaoId = $id;
+    }
+
+    public function setComCidadao(?Cidadao $cidadao): void
+    {
+        $this->comCidadaoId = $cidadao->getId();
     }
 }

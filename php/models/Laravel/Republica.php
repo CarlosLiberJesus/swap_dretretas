@@ -50,4 +50,27 @@ class Republica
             self::create(['id' => 4, 'uuid' => '', 'nome' => 'Terceira República', 'ano_inicio' => 1974]),
         ];
     }
+
+    public static function getByNome(string $nome): ?self
+    {
+        $republicas = self::all();
+        foreach ($republicas as $republica) {
+            if (stripos($republica->nome, $nome) !== false) {
+                return $republica;
+            }
+        }
+        return null;
+    }
+
+    public static function getDistinctNome(): array
+    {
+        $republicas = self::all();
+        $distinctNome = [];
+        foreach ($republicas as $republica) {
+            if (!in_array($republica->nome, $distinctNome)) {
+                $distinctNome[] = $republica->nome;
+            }
+        }
+        return $distinctNome;
+    }
 }

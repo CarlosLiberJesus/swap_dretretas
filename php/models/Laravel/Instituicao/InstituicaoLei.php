@@ -10,19 +10,19 @@ class InstituicaoLei
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(int $id, string $uuid, string $nome, int $instituicaoId, int $leiId)
+    public function __construct(int $id)
     {
         $this->id = $id;
-        $this->instituicaoId = $instituicaoId;
-        $this->leiId = $leiId;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        $lei = new self($data['id'], $data['instituicao_id'], $data['lei_id']);
-        return $lei;
+        $instituicaoLei = new self($data['id'] ?? 0);
+        $instituicaoLei->instituicaoId = $data['instituicao_id'];
+        $instituicaoLei->leiId = $data['lei_id'];
+        return $instituicaoLei;
     }
 
     public static function findById(\PDO $pdo, int $id): ?self
@@ -71,13 +71,62 @@ class InstituicaoLei
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO instituicao_leis (uuid, nome, instituicao_id, lei_id, created_at, updated_at) VALUES ('%s', '%s', %d, %d, '%s', '%s')",
-            $this->uuid,
-            $this->nome,
+            "INSERT INTO instituicao_leis (instituicao_id, lei_id, created_at, updated_at) VALUES (%d, %d, '%s', '%s')",
             $this->instituicaoId,
             $this->leiId,
             $this->createdAt,
             $this->updatedAt
         );
+    }
+
+    // Getters and Setters
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getInstituicaoId(): int
+    {
+        return $this->instituicaoId;
+    }
+
+    public function getLeiId(): int
+    {
+        return $this->leiId;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setInstituicaoId(int $instituicaoId): void
+    {
+        $this->instituicaoId = $instituicaoId;
+    }
+
+    public function setLeiId(int $leiId): void
+    {
+        $this->leiId = $leiId;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

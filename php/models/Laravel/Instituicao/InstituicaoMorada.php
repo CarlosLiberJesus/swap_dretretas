@@ -13,8 +13,9 @@ class InstituicaoMorada
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(int $instituicaoId, string $morada)
+    public function __construct(int $id, int $instituicaoId, string $morada)
     {
+        $this->id = $id;
         $this->instituicaoId = $instituicaoId;
         $this->morada = $morada;
         $this->createdAt = date('Y-m-d H:i:s');
@@ -23,7 +24,7 @@ class InstituicaoMorada
 
     public static function create(array $data): self
     {
-        $morada = new self($data['instituicao_id'], $data['morada']);
+        $morada = new self($data['id'], $data['instituicao_id'], $data['morada']);
         $morada->codigoPostal = $data['codigo_postal'] ?? null;
         $morada->localidade = $data['localidade'] ?? null;
         $morada->concelhoId = $data['concelho_id'] ?? null;
@@ -63,5 +64,86 @@ class InstituicaoMorada
             $this->createdAt,
             $this->updatedAt
         );
+    }
+
+    // Getters and Setters
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getInstituicaoId(): int
+    {
+        return $this->instituicaoId;
+    }
+
+    public function getMorada(): string
+    {
+        return $this->morada;
+    }
+
+    public function getCodigoPostal(): ?string
+    {
+        return $this->codigoPostal;
+    }
+
+    public function getLocalidade(): ?string
+    {
+        return $this->localidade;
+    }
+
+    public function getConcelhoId(): ?int
+    {
+        return $this->concelhoId;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setInstituicaoId(int $instituicaoId): void
+    {
+        $this->instituicaoId = $instituicaoId;
+    }
+
+    public function setMorada(string $morada): void
+    {
+        $this->morada = $morada;
+    }
+
+    public function setCodigoPostal(?string $codigoPostal): void
+    {
+        $this->codigoPostal = $codigoPostal;
+    }
+
+    public function setLocalidade(?string $localidade): void
+    {
+        $this->localidade = $localidade;
+    }
+
+    public function setConcelhoId(?int $concelhoId): void
+    {
+        $this->concelhoId = $concelhoId;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

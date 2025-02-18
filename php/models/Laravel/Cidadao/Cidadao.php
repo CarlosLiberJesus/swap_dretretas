@@ -40,6 +40,19 @@ class Cidadao
         return $instance;
     }
 
+    public static function findById(\PDO $pdo, int $id): ?self
+    {
+        $stmt = $pdo->prepare("SELECT * FROM cidadaos WHERE id = ?");
+        $stmt->execute([$id]);
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($data) {
+            return self::create($data);
+        }
+
+        return null;
+    }
+
     public static function findByUuid(\PDO $pdo, string $uuid): ?self
     {
         $stmt = $pdo->prepare("SELECT * FROM cidadaos WHERE uuid = ?");

@@ -15,8 +15,9 @@ class InstituicaoLegislatura
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(string $uuid, int $instituicaoId, int $legislaturaId)
+    public function __construct(int $id, string $uuid, int $instituicaoId, int $legislaturaId)
     {
+        $this->id = $id;
         $this->uuid = $uuid;
         $this->instituicaoId = $instituicaoId;
         $this->legislaturaId = $legislaturaId;
@@ -26,7 +27,7 @@ class InstituicaoLegislatura
 
     public static function create(array $data): self
     {
-        $legislatura = new self($data['uuid'], $data['instituicao_id'], $data['legislatura_id']);
+        $legislatura = new self($data['id'], $data['uuid'], $data['instituicao_id'], $data['legislatura_id']);
         $legislatura->nome = $data['nome'] ?? null;
         $legislatura->dataInicio = $data['data_inicio'] ?? null;
         $legislatura->dataFim = $data['data_fim'] ?? null;
@@ -78,9 +79,110 @@ class InstituicaoLegislatura
         $anexos = [];
 
         while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $anexos[] = InstituicaoAnexo::create($data);
+            $anexos[] = InstituicaoLegislaturaAnexo::create($data);
         }
 
         return $anexos;
+    }
+
+    // Getters and Setters
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getUuid(): string
+    {
+        return $this->uuid;
+    }
+
+    public function getNome(): ?string
+    {
+        return $this->nome;
+    }
+
+    public function getInstituicaoId(): int
+    {
+        return $this->instituicaoId;
+    }
+
+    public function getLegislaturaId(): int
+    {
+        return $this->legislaturaId;
+    }
+
+    public function getDataInicio(): ?string
+    {
+        return $this->dataInicio;
+    }
+
+    public function getDataFim(): ?string
+    {
+        return $this->dataFim;
+    }
+
+    public function getSinopse(): ?string
+    {
+        return $this->sinopse;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setUuid(string $uuid): void
+    {
+        $this->uuid = $uuid;
+    }
+
+    public function setNome(?string $nome): void
+    {
+        $this->nome = $nome;
+    }
+
+    public function setInstituicaoId(int $instituicaoId): void
+    {
+        $this->instituicaoId = $instituicaoId;
+    }
+
+    public function setLegislaturaId(int $legislaturaId): void
+    {
+        $this->legislaturaId = $legislaturaId;
+    }
+
+    public function setDataInicio(?string $dataInicio): void
+    {
+        $this->dataInicio = $dataInicio;
+    }
+
+    public function setDataFim(?string $dataFim): void
+    {
+        $this->dataFim = $dataFim;
+    }
+
+    public function setSinopse(?string $sinopse): void
+    {
+        $this->sinopse = $sinopse;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

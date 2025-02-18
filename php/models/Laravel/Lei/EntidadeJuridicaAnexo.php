@@ -8,6 +8,7 @@ use Carlos\Organize\Model\Laravel\AnexoTipo;
 
 class EntidadeJuridicaAnexo
 {
+    private $id;
     private $uuid;
     private $nome;
     private $entidadeJuridicaId;
@@ -26,6 +27,7 @@ class EntidadeJuridicaAnexo
     public static function create(array $data): self
     {
         $instance = new self();
+        $instance->id = $data['id'] ?? null;
         $instance->uuid = $data['uuid'] ?? null;
         $instance->nome = $data['nome'] ?? null;
         $instance->entidadeJuridicaId = $data['entidades_juridica_id'] ?? null;
@@ -51,14 +53,40 @@ class EntidadeJuridicaAnexo
         return null;
     }
 
+    public static function findByNome(\PDO $pdo, string $nome): ?self
+    {
+        $stmt = $pdo->prepare("SELECT * FROM entidade_juridica_anexos WHERE nome LIKE ?");
+        $stmt->execute(['%' . $nome . '%']);
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($data) {
+            return self::create($data);
+        }
+
+        return null;
+    }
+
+    public static function getDistinctNome(\PDO $pdo): array
+    {
+        $stmt = $pdo->query("SELECT DISTINCT nome FROM entidade_juridica_anexos");
+        $nomes = [];
+
+        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $nomes[] = $data['nome'];
+        }
+
+        return $nomes;
+    }
+
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO entidade_juridica_anexos (uuid, nome, entidades_juridica_id, anexo_tipo_id, path, src, created_at, updated_at) VALUES ('%s', '%s', %d, %d, %s, %s, '%s', '%s')",
+            "INSERT INTO entidade_juridica_anexos (id, uuid, nome, entidades_juridica_id, anexo_tipo_id, path, src, created_at, updated_at) VALUES (%d, '%s', '%s', %d, %d, %s, %s, '%s', '%s')",
+            $this->id,
             $this->uuid,
             $this->nome,
             $this->entidadeJuridicaId,
-            $this->anexoTipo->getId(),
+            $this->anexoTipo->id,
             $this->path !== null ? "'" . $this->path . "'" : "NULL",
             $this->src !== null ? "'" . $this->src . "'" : "NULL",
             $this->createdAt,
@@ -67,6 +95,11 @@ class EntidadeJuridicaAnexo
     }
 
     // Getters and Setters
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
     public function getUuid(): ?string
     {
         return $this->uuid;
@@ -105,6 +138,11 @@ class EntidadeJuridicaAnexo
     public function getUpdatedAt(): string
     {
         return $this->updatedAt;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     public function setUuid(string $uuid): void

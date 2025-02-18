@@ -10,23 +10,23 @@ class ContactoTipo
     public $nome;
     public $params;
     public $description;
+    public $createdAt;
+    public $updatedAt;
 
-    public function __construct(int $id, string $nome, ?string $description = null, ?string $params = null)
+    public function __construct(int $id)
     {
         $this->id = $id;
-        $this->nome = $nome;
-        $this->description = $description;
-        $this->params = $params;
+        $this->createdAt = date('Y-m-d H:i:s');
+        $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        return new self(
-            $data['id'] ?? null,
-            $data['nome'],
-            $data['description'] ?? null,
-            $data['params'] ?? null
-        );
+        $contactoTipo = new self($data['id'] ?? 0);
+        $contactoTipo->nome = $data['nome'];
+        $contactoTipo->description = $data['description'] ?? null;
+        $contactoTipo->params = $data['params'] ?? null;
+        return $contactoTipo;
     }
 
     public static function all(): array
@@ -70,5 +70,28 @@ class ContactoTipo
         }
 
         return null;
+    }
+
+    public static function getContactoTipo(string $nome, string $description): ?self
+    {
+        $contactos = self::all();
+        foreach ($contactos as $contacto) {
+            if ($contacto->nome === $nome && stripos($contacto->description, $description) !== false) {
+                return $contacto;
+            }
+        }
+        return null;
+    }
+
+    public static function getDistinctNome(): array
+    {
+        $contactos = self::all();
+        $distinctNome = [];
+        foreach ($contactos as $contacto) {
+            if (!in_array($contacto->nome, $distinctNome)) {
+                $distinctNome[] = $contacto->nome;
+            }
+        }
+        return $distinctNome;
     }
 }

@@ -64,4 +64,65 @@ class InstituicaoContacto
             $this->updatedAt
         );
     }
+
+    // Getters and Setters
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getInstituicaoId(): int
+    {
+        return $this->instituicaoId;
+    }
+
+    public function getContactoTipoId(): int
+    {
+        return $this->contactoTipoId;
+    }
+
+    public function getContacto(): string
+    {
+        return $this->contacto;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setInstituicaoId(int $instituicaoId): void
+    {
+        $this->instituicaoId = $instituicaoId;
+    }
+
+    public function setContactoTipoId(int $contactoTipoId): void
+    {
+        $this->contactoTipoId = $contactoTipoId;
+    }
+
+    public function setContacto(string $contacto): void
+    {
+        $this->contacto = $contacto;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
 }

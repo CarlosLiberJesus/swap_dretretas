@@ -10,8 +10,9 @@ class InstituicaoNacionalidade
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(int $instituicaoId, int $nacionalidadeId)
+    public function __construct(int $id, int $instituicaoId, int $nacionalidadeId)
     {
+        $this->id = $id;
         $this->instituicaoId = $instituicaoId;
         $this->nacionalidadeId = $nacionalidadeId;
         $this->createdAt = date('Y-m-d H:i:s');
@@ -20,7 +21,7 @@ class InstituicaoNacionalidade
 
     public static function create(array $data): self
     {
-        return new self($data['instituicao_id'], $data['nacionalidade_id']);
+        return new self($data['id'], $data['instituicao_id'], $data['nacionalidade_id']);
     }
 
     public static function findById(\PDO $pdo, int $id): ?self
@@ -53,5 +54,56 @@ class InstituicaoNacionalidade
             $this->createdAt,
             $this->updatedAt
         );
+    }
+
+    // Getters and Setters
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getInstituicaoId(): int
+    {
+        return $this->instituicaoId;
+    }
+
+    public function getNacionalidadeId(): int
+    {
+        return $this->nacionalidadeId;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setInstituicaoId(int $instituicaoId): void
+    {
+        $this->instituicaoId = $instituicaoId;
+    }
+
+    public function setNacionalidadeId(int $nacionalidadeId): void
+    {
+        $this->nacionalidadeId = $nacionalidadeId;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

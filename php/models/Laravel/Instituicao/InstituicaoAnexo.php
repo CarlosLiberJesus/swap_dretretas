@@ -8,6 +8,7 @@ use Carlos\Organize\Model\Laravel\AnexoTipo;
 
 class InstituicaoAnexo
 {
+    private $id;
     private $uuid;
     private $nome;
     private $instituicaoId;
@@ -17,8 +18,9 @@ class InstituicaoAnexo
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(string $uuid, string $nome, int $instituicaoId, int $anexoTipoId)
+    public function __construct(int $id, string $uuid, string $nome, int $instituicaoId, int $anexoTipoId)
     {
+        $this->id = $id;
         $this->uuid = $uuid;
         $this->nome = $nome;
         $this->instituicaoId = $instituicaoId;
@@ -30,6 +32,7 @@ class InstituicaoAnexo
     public static function create(array $data): self
     {
         return new self(
+            $data['id'],
             $data['uuid'],
             $data['nome'],
             $data['instituicao_id'],
@@ -50,9 +53,10 @@ class InstituicaoAnexo
         return null;
     }
 
-    public static function all(\PDO $pdo): array
+    public static function all(\PDO $pdo, $instituicaoId): array
     {
-        $stmt = $pdo->query("SELECT * FROM instituicao_anexos");
+        $stmt = $pdo->query("SELECT * FROM instituicao_anexos WHERE instituicao_id = $instituicaoId");
+        $stmt->execute([$instituicaoId]);
         $anexos = [];
 
         while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
@@ -75,5 +79,96 @@ class InstituicaoAnexo
             $this->createdAt,
             $this->updatedAt
         );
+    }
+
+    // Getters and Setters
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getUuid(): string
+    {
+        return $this->uuid;
+    }
+
+    public function getNome(): string
+    {
+        return $this->nome;
+    }
+
+    public function getInstituicaoId(): int
+    {
+        return $this->instituicaoId;
+    }
+
+    public function getAnexoTipoId(): int
+    {
+        return $this->anexoTipoId;
+    }
+
+    public function getPath(): ?string
+    {
+        return $this->path;
+    }
+
+    public function getSrc(): ?string
+    {
+        return $this->src;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setUuid(string $uuid): void
+    {
+        $this->uuid = $uuid;
+    }
+
+    public function setNome(string $nome): void
+    {
+        $this->nome = $nome;
+    }
+
+    public function setInstituicaoId(int $instituicaoId): void
+    {
+        $this->instituicaoId = $instituicaoId;
+    }
+
+    public function setAnexoTipoId(int $anexoTipoId): void
+    {
+        $this->anexoTipoId = $anexoTipoId;
+    }
+
+    public function setPath(?string $path): void
+    {
+        $this->path = $path;
+    }
+
+    public function setSrc(?string $src): void
+    {
+        $this->src = $src;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

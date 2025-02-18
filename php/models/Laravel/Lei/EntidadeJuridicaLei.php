@@ -8,6 +8,7 @@ use Carlos\Organize\Model\Laravel\Lei\Lei;
 
 class EntidadeJuridicaLei
 {
+    private $id;
     private $uuid;
     private $nome;
     private $entidadeJuridicaId;
@@ -15,19 +16,20 @@ class EntidadeJuridicaLei
     private $createdAt;
     private $updatedAt;
 
-    public function __construct()
+    public function __construct(int $id)
     {
+        $this->id = $id;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        $instance = new self();
+        $instance = new self($data['id'] ?? 0);
         $instance->uuid = $data['uuid'] ?? null;
         $instance->nome = $data['nome'] ?? null;
         $instance->entidadeJuridicaId = $data['entidade_juridica_id'] ?? null;
-        $instance->lei = Lei::findById($data['lei_id']);
+        $instance->lei = $data['lei_id'];
         $instance->createdAt = $data['created_at'] ?? $instance->createdAt;
         $instance->updatedAt = $data['updated_at'] ?? $instance->updatedAt;
 
@@ -73,6 +75,11 @@ class EntidadeJuridicaLei
     }
 
     // Getters and Setters
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
     public function getUuid(): ?string
     {
         return $this->uuid;
@@ -101,6 +108,11 @@ class EntidadeJuridicaLei
     public function getUpdatedAt(): string
     {
         return $this->updatedAt;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 
     public function setUuid(string $uuid): void

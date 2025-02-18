@@ -20,16 +20,16 @@ class Lei
     private $createdAt;
     private $updatedAt;
 
-    public function __construct()
+    public function __construct(int $id)
     {
+        $this->id = $id;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        $instance = new self();
-        $instance->id = $data['id'] ?? null;
+        $instance = new self($data['id'] ?? 0);
         $instance->uuid = $data['uuid'] ?? null;
         $instance->codigo = $data['codigo'] ?? null;
         $instance->nomeCompleto = $data['nome_completo'] ?? null;
@@ -59,6 +59,31 @@ class Lei
         return null;
     }
 
+    public static function findByNome(\PDO $pdo, string $nome): ?self
+    {
+        $stmt = $pdo->prepare("SELECT * FROM leis WHERE nome_completo LIKE ?");
+        $stmt->execute(['%' . $nome . '%']);
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($data) {
+            return self::create($data);
+        }
+
+        return null;
+    }
+
+    public static function getDistinctNome(\PDO $pdo): array
+    {
+        $stmt = $pdo->query("SELECT DISTINCT nome_completo FROM leis");
+        $nomes = [];
+
+        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $nomes[] = $data['nome_completo'];
+        }
+
+        return $nomes;
+    }
+
     public static function all(\PDO $pdo): array
     {
         $stmt = $pdo->query("SELECT * FROM leis");
@@ -74,7 +99,8 @@ class Lei
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO leis (uuid, codigo, nome_completo, proponente, sumario, texto, path, src, em_vigor, data_toggle, created_at, updated_at) VALUES ('%s', '%s', '%s', %s, %s, %s, %s, %s, %d, %s, '%s', '%s')",
+            "INSERT INTO leis (id, uuid, codigo, nome_completo, proponente, sumario, texto, path, src, em_vigor, data_toggle, created_at, updated_at) VALUES (%d, '%s', '%s', '%s', %s, %s, %s, %s, %s, %d, %s, '%s', '%s')",
+            $this->id,
             $this->uuid,
             $this->codigo,
             $this->nomeCompleto,

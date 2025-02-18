@@ -13,16 +13,16 @@ class DiarioRepublica
     private $createdAt;
     private $updatedAt;
 
-    public function __construct()
+    public function __construct(int $id)
     {
+        $this->id = $id;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        $instance = new self();
-        $instance->id = $data['id'] ?? null;
+        $instance = new self($data['id'] ?? 0);
         $instance->uuid = $data['uuid'] ?? null;
         $instance->nome = $data['nome'] ?? null;
         $instance->publicacao = $data['publicacao'] ?? null;
@@ -36,6 +36,19 @@ class DiarioRepublica
     {
         $stmt = $pdo->prepare("SELECT * FROM diario_republicas WHERE id = ?");
         $stmt->execute([$id]);
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($data) {
+            return self::create($data);
+        }
+
+        return null;
+    }
+
+    public static function findByNome(\PDO $pdo, string $nome): ?self
+    {
+        $stmt = $pdo->prepare("SELECT * FROM diario_republicas WHERE nome LIKE ?");
+        $stmt->execute(['%' . $nome . '%']);
         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         if ($data) {
@@ -60,7 +73,8 @@ class DiarioRepublica
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO diario_republicas (uuid, nome, publicacao, created_at, updated_at) VALUES ('%s', '%s', '%s', '%s', '%s')",
+            "INSERT INTO diario_republicas (id, uuid, nome, publicacao, created_at, updated_at) VALUES (%d, '%s', '%s', '%s', '%s', '%s')",
+            $this->id,
             $this->uuid,
             $this->nome,
             $this->publicacao,

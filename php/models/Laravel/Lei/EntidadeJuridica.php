@@ -13,16 +13,16 @@ class EntidadeJuridica
     private $createdAt;
     private $updatedAt;
 
-    public function __construct()
+    public function __construct(int $id)
     {
+        $this->id = $id;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        $instance = new self();
-        $instance->id = $data['id'] ?? null;
+        $instance = new self($data['id'] ?? 0);
         $instance->nome = $data['nome'] ?? null;
         $instance->descricao = $data['descricao'] ?? null;
         $instance->params = $data['params'] ?? null;
@@ -36,6 +36,19 @@ class EntidadeJuridica
     {
         $stmt = $pdo->prepare("SELECT * FROM entidade_juridicas WHERE id = ?");
         $stmt->execute([$id]);
+        $data = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if ($data) {
+            return self::create($data);
+        }
+
+        return null;
+    }
+
+    public static function findByNome(\PDO $pdo, string $nome): ?self
+    {
+        $stmt = $pdo->prepare("SELECT * FROM entidade_juridicas WHERE nome LIKE ?");
+        $stmt->execute(['%' . $nome . '%']);
         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         if ($data) {
@@ -60,7 +73,8 @@ class EntidadeJuridica
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO entidade_juridicas (nome, descricao, params, created_at, updated_at) VALUES ('%s', %s, %s, '%s', '%s')",
+            "INSERT INTO entidade_juridicas (id, nome, descricao, params, created_at, updated_at) VALUES (%d, '%s', %s, %s, '%s', '%s')",
+            $this->id,
             $this->nome,
             $this->descricao !== null ? "'" . $this->descricao . "'" : "NULL",
             $this->params !== null ? "'" . $this->params . "'" : "NULL",
@@ -144,17 +158,17 @@ class EntidadeJuridica
         return $anexos;
     }
 
-    // Método para buscar os anexos relacionados
+    // Método para buscar as leis relacionadas
     public function leis(\PDO $pdo): array
     {
         $stmt = $pdo->prepare("SELECT * FROM entidade_juridica_leis WHERE entidades_juridica_id = ?");
         $stmt->execute([$this->id]);
-        $anexos = [];
+        $leis = [];
 
         while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $anexos[] = EntidadeJuridicaLei::create($data);
+            $leis[] = EntidadeJuridicaLei::create($data);
         }
 
-        return $anexos;
+        return $leis;
     }
 }

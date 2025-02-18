@@ -64,7 +64,7 @@ class InstituicaoDados
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO instituicao_dados (nif, certidao_permanente, instituicao_id, descricao, created_at, updated_at) VALUES (%s, %s, %d, '%s', '%s', '%s')",
+            "INSERT INTO instituicao_dados (nif, certidao_permanente, instituicao_id, descricao, created_at, updated_at) VALUES (%s, %s, %d, '%s', '%s')",
             $this->nif !== null ? "'" . $this->nif . "'" : "NULL",
             $this->certidaoPermanente !== null ? "'" . $this->certidaoPermanente . "'" : "NULL",
             $this->instituicaoId,
@@ -72,5 +72,76 @@ class InstituicaoDados
             $this->createdAt,
             $this->updatedAt
         );
+    }
+
+    // Getters and Setters
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getNif(): ?float
+    {
+        return $this->nif;
+    }
+
+    public function getCertidaoPermanente(): ?string
+    {
+        return $this->certidaoPermanente;
+    }
+
+    public function getInstituicaoId(): int
+    {
+        return $this->instituicaoId;
+    }
+
+    public function getDescricao(): string
+    {
+        return $this->descricao;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function setNif(?float $nif): void
+    {
+        $this->nif = $nif;
+    }
+
+    public function setCertidaoPermanente(?string $certidaoPermanente): void
+    {
+        $this->certidaoPermanente = $certidaoPermanente;
+    }
+
+    public function setInstituicaoId(int $instituicaoId): void
+    {
+        $this->instituicaoId = $instituicaoId;
+    }
+
+    public function setDescricao(string $descricao): void
+    {
+        $this->descricao = $descricao;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 }
