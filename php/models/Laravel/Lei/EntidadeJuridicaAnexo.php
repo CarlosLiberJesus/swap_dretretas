@@ -51,18 +51,6 @@ class EntidadeJuridicaAnexo
         return null;
     }
 
-    public static function all(\PDO $pdo): array
-    {
-        $stmt = $pdo->query("SELECT * FROM entidade_juridica_anexos");
-        $anexos = [];
-
-        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $anexos[] = self::create($data);
-        }
-
-        return $anexos;
-    }
-
     public function toSqlInsert(): string
     {
         return sprintf(

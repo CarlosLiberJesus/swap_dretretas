@@ -2,46 +2,44 @@
 
 declare(strict_types=1);
 
-namespace Carlos\Organize\Model\Laravel\Cidadao;
+namespace Carlos\Organize\Model\Laravel\Lei;
 
-use Carlos\Organize\Model\Laravel\AnexoTipo;
-
-class CidadaoCargoAnexo
+class DiarioRepublicaPublicacao
 {
-    private $id;
+
     private $uuid;
     private $nome;
-    private $cidadaoCargoId;
+    private $diarioRepublicaPublicacaoId;
     private $anexoTipo;
     private $path;
     private $src;
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(int $id)
+    public function __construct()
     {
-        $this->id = $id;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        $anexo = new self($data['id'] ?? 0);
-        $anexo->uuid = $data['uuid'] ?? null;
-        $anexo->nome = $data['nome'] ?? null;
-        $anexo->cidadaoCargoId = $data['cidadao_cargo_id'] ?? null;
-        $anexo->anexoTipo = AnexoTipo::findById($data['anexo_tipo_id']);
-        $anexo->path = $data['path'] ?? null;
-        $anexo->src = $data['src'] ?? null;
-        $anexo->createdAt = $data['created_at'] ?? $anexo->createdAt;
-        $anexo->updatedAt = $data['updated_at'] ?? $anexo->updatedAt;
-        return $anexo;
+        $instance = new self();
+        $instance->uuid = $data['uuid'] ?? null;
+        $instance->nome = $data['nome'] ?? null;
+        $instance->diarioRepublicaPublicacaoId = $data['diario_republica_publicao_id'] ?? null;
+        $instance->anexoTipo = AnexoTipo::findById($data['anexo_tipo_id']);
+        $instance->path = $data['path'] ?? null;
+        $instance->src = $data['src'] ?? null;
+        $instance->createdAt = $data['created_at'] ?? $instance->createdAt;
+        $instance->updatedAt = $data['updated_at'] ?? $instance->updatedAt;
+
+        return $instance;
     }
 
     public static function findByUuid(\PDO $pdo, string $uuid): ?self
     {
-        $stmt = $pdo->prepare("SELECT * FROM cidadao_cargo_anexos WHERE uuid = ?");
+        $stmt = $pdo->prepare("SELECT * FROM diario_republica_publicacao_anexos WHERE uuid = ?");
         $stmt->execute([$uuid]);
         $data = $stmt->fetch(\PDO::FETCH_ASSOC);
 
@@ -52,27 +50,14 @@ class CidadaoCargoAnexo
         return null;
     }
 
-    public static function all(\PDO $pdo): array
-    {
-        $stmt = $pdo->query("SELECT * FROM cidadao_cargo_anexos");
-        $anexos = [];
-
-        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $anexos[] = self::create($data);
-        }
-
-        return $anexos;
-    }
-
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO cidadao_cargo_anexos (id, uuid, nome, cidadao_cargo_id, anexo_tipo_id, path, src, created_at, updated_at) VALUES (%d, '%s', '%s', %d, %d, %s, %s, '%s', '%s')",
-            $this->id,
+            "INSERT INTO diario_republica_publicacao_anexos (uuid, nome, diario_republica_publicao_id, anexo_tipo_id, path, src, created_at, updated_at) VALUES ('%s', '%s', %d, %d, %s, %s, '%s', '%s')",
             $this->uuid,
             $this->nome,
-            $this->cidadaoCargoId,
-            $this->anexoTipo->id,
+            $this->diarioRepublicaPublicacaoId,
+            $this->anexoTipo->getId(),
             $this->path !== null ? "'" . $this->path . "'" : "NULL",
             $this->src !== null ? "'" . $this->src . "'" : "NULL",
             $this->createdAt,
@@ -91,9 +76,9 @@ class CidadaoCargoAnexo
         return $this->nome;
     }
 
-    public function getCidadaoCargoId(): ?int
+    public function getDiarioRepublicaPublicacaoId(): ?int
     {
-        return $this->cidadaoCargoId;
+        return $this->diarioRepublicaPublicacaoId;
     }
 
     public function getAnexoTipo(): ?AnexoTipo
@@ -131,9 +116,9 @@ class CidadaoCargoAnexo
         $this->nome = $nome;
     }
 
-    public function setCidadaoCargoId(int $cidadaoCargoId): void
+    public function setDiarioRepublicaPublicacaoId(int $diarioRepublicaPublicacaoId): void
     {
-        $this->cidadaoCargoId = $cidadaoCargoId;
+        $this->diarioRepublicaPublicacaoId = $diarioRepublicaPublicacaoId;
     }
 
     public function setAnexoTipo(AnexoTipo $anexoTipo): void
@@ -160,4 +145,5 @@ class CidadaoCargoAnexo
     {
         $this->updatedAt = $updatedAt;
     }
+
 }

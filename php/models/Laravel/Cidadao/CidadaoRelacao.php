@@ -15,8 +15,9 @@ class CidadaoRelacao
     private $createdAt;
     private $updatedAt;
 
-    public function __construct()
+    public function __construct(int $id)
     {
+        $this->id = $id;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
@@ -113,8 +114,7 @@ class CidadaoRelacao
 
     public static function create(array $data): self
     {
-        $relacao = new self();
-        $relacao->id = $data['id'] ?? 0;
+        $relacao = new self($data['id'] ?? 0);
         $relacao->cidadaoId = $data['cidadao_id'] ?? null;
         $relacao->comCidadaoId = $data['com_cidadao_id'] ?? null;
         $relacao->relacaoTipoId = $data['relacao_tipo_id'] ?? null;

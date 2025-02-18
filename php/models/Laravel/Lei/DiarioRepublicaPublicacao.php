@@ -155,4 +155,18 @@ class DiarioRepublicaPublicacao
     {
         $this->updatedAt = $updatedAt;
     }
+
+    // Método para buscar os anexos relacionados
+    public function anexos(\PDO $pdo): array
+    {
+        $stmt = $pdo->prepare("SELECT * FROM diario_republica_publicacao_anexos WHERE diario_republica_publicao_id = ?");
+        $stmt->execute([$this->id]);
+        $anexos = [];
+
+        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $anexos[] = EntidadeJuridicaAnexo::create($data);
+        }
+
+        return $anexos;
+    }
 }

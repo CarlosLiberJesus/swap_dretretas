@@ -11,6 +11,7 @@ class Cidadao
     private $nome;
     private $dataNascimento;
     private $dataFalecimento;
+    private $genero;
     private $freguesiaId;
     private $nacional;
     private $createdAt;
@@ -30,6 +31,7 @@ class Cidadao
         $instance->nome = $data['nome'] ?? null;
         $instance->dataNascimento = $data['data_nascimento'] ?? null;
         $instance->dataFalecimento = $data['data_falecimento'] ?? null;
+        $instance->genero = $data['genero'] ?? null;
         $instance->freguesiaId = $data['freguesia_id'] ?? null;
         $instance->nacional = $data['nacional'] ?? null;
         $instance->createdAt = $data['created_at'] ?? $instance->createdAt;
@@ -66,11 +68,12 @@ class Cidadao
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO cidadaos (uuid, nome, data_nascimento, data_falecimento, freguesia_id, nacional, created_at, updated_at) VALUES ('%s', '%s', %s, %s, %s, %d, '%s', '%s')",
+            "INSERT INTO cidadaos (uuid, nome, data_nascimento, data_falecimento, genero, freguesia_id, nacional, created_at, updated_at) VALUES ('%s', '%s', %s, %s, %s, %s, %d, '%s', '%s')",
             $this->uuid,
             $this->nome,
             $this->dataNascimento !== null ? "'" . $this->dataNascimento . "'" : "NULL",
             $this->dataFalecimento !== null ? "'" . $this->dataFalecimento . "'" : "NULL",
+            $this->genero !== null ? "'" . $this->genero . "'" : "NULL",
             $this->freguesiaId !== null ? $this->freguesiaId : "NULL",
             $this->nacional ? 1 : 0,
             $this->createdAt,
@@ -102,6 +105,11 @@ class Cidadao
     public function getDataFalecimento(): ?string
     {
         return $this->dataFalecimento;
+    }
+
+    public function getGenero(): ?string
+    {
+        return $this->genero;
     }
 
     public function getFreguesiaId(): ?int
@@ -147,6 +155,11 @@ class Cidadao
     public function setDataFalecimento(?string $dataFalecimento): void
     {
         $this->dataFalecimento = $dataFalecimento;
+    }
+
+    public function setGenero(?string $genero): void
+    {
+        $this->genero = $genero;
     }
 
     public function setFreguesiaId(?int $freguesiaId): void

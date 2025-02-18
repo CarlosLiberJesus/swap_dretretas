@@ -14,6 +14,7 @@ class Lei
     private $sumario;
     private $texto;
     private $path;
+    private $src;
     private $emVigor;
     private $dataToggle;
     private $createdAt;
@@ -36,6 +37,7 @@ class Lei
         $instance->sumario = $data['sumario'] ?? null;
         $instance->texto = $data['texto'] ?? null;
         $instance->path = $data['path'] ?? null;
+        $instance->src = $data['src'] ?? null;
         $instance->emVigor = $data['em_vigor'] ?? null;
         $instance->dataToggle = $data['data_toggle'] ?? null;
         $instance->createdAt = $data['created_at'] ?? $instance->createdAt;
@@ -72,7 +74,7 @@ class Lei
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO leis (uuid, codigo, nome_completo, proponente, sumario, texto, path, em_vigor, data_toggle, created_at, updated_at) VALUES ('%s', '%s', '%s', %s, %s, %s, %s, %d, %s, '%s', '%s')",
+            "INSERT INTO leis (uuid, codigo, nome_completo, proponente, sumario, texto, path, src, em_vigor, data_toggle, created_at, updated_at) VALUES ('%s', '%s', '%s', %s, %s, %s, %s, %s, %d, %s, '%s', '%s')",
             $this->uuid,
             $this->codigo,
             $this->nomeCompleto,
@@ -80,6 +82,7 @@ class Lei
             $this->sumario !== null ? "'" . $this->sumario . "'" : "NULL",
             $this->texto !== null ? "'" . $this->texto . "'" : "NULL",
             $this->path !== null ? "'" . $this->path . "'" : "NULL",
+            $this->src !== null ? "'" . $this->src . "'" : "NULL",
             $this->emVigor ? 1 : 0,
             $this->dataToggle !== null ? "'" . $this->dataToggle . "'" : "NULL",
             $this->createdAt,
@@ -126,6 +129,11 @@ class Lei
     public function getPath(): ?string
     {
         return $this->path;
+    }
+
+    public function getSrc(): ?string
+    {
+        return $this->src;
     }
 
     public function isEmVigor(): ?bool
@@ -186,6 +194,11 @@ class Lei
     public function setPath(?string $path): void
     {
         $this->path = $path;
+    }
+
+    public function setSrc(?string $src): void
+    {
+        $this->src = $src;
     }
 
     public function setEmVigor(bool $emVigor): void
