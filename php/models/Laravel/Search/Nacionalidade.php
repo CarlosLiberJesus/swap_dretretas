@@ -86,7 +86,8 @@ class Nacionalidade
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO nacionalidades (uuid, nacionalidade, pais, params) VALUES ('%s', '%s', '%s', %s)",
+            "INSERT INTO nacionalidades (id, uuid, nacionalidade, pais, params) VALUES (%d, '%s', '%s', '%s', %s)",
+            $this->id,
             $this->uuid,
             $this->nacionalidade,
             $this->pais,

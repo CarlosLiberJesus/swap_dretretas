@@ -16,16 +16,16 @@ class InstituicaoRelacao
     private $createdAt;
     private $updatedAt;
 
-    public function __construct()
+    public function __construct(int $id)
     {
+        $this->id = $id;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
-    }
+    }    
 
     public static function create(array $data): self
     {
-        $relacao = new self();
-        $relacao->id = $data['id'] ?? 0;
+        $relacao = new self($data['id'] ?? 0);
         $relacao->instituicaoId = $data['instituicao_id'] ?? null;
         $relacao->relacaoTipoId = $data['relacao_tipo_id'] ?? null;
         $relacao->comInstituicaoId = $data['com_instituicao_id'] ?? null;

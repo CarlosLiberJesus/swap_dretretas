@@ -9,7 +9,7 @@ class DiarioRepublica
     private $id;
     private $uuid;
     private $nome;
-    private $publicacao;
+    private $publicacao; //date
     private $createdAt;
     private $updatedAt;
 
@@ -142,5 +142,18 @@ class DiarioRepublica
     public function setUpdatedAt(string $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
+    }
+
+    public function publicacoes(\PDO $pdo): array
+    {
+        $stmt = $pdo->prepare("SELECT * FROM diario_republica_publicacoes WHERE diario_republica_id = ?");
+        $stmt->execute([$this->id]);
+        $anexos = [];
+
+        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $anexos[] = DiarioRepublicaPublicacao::create($data);
+        }
+
+        return $anexos;
     }
 }

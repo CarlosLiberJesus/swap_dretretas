@@ -15,19 +15,19 @@ class InstituicaoLegislatura
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(int $id, string $uuid, int $instituicaoId, int $legislaturaId)
+    public function __construct(int $id)
     {
         $this->id = $id;
-        $this->uuid = $uuid;
-        $this->instituicaoId = $instituicaoId;
-        $this->legislaturaId = $legislaturaId;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        $legislatura = new self($data['id'], $data['uuid'], $data['instituicao_id'], $data['legislatura_id']);
+        $legislatura = new self($data['id'] ?? 0);
+        $legislatura->uuid = $data['uuid'] ?? null;
+        $legislatura->instituicaoId = $data['instituicao_id'] ?? null;
+        $legislatura->legislaturaId = $data['legislatura_id'] ?? null;
         $legislatura->nome = $data['nome'] ?? null;
         $legislatura->dataInicio = $data['data_inicio'] ?? null;
         $legislatura->dataFim = $data['data_fim'] ?? null;
@@ -59,7 +59,8 @@ class InstituicaoLegislatura
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO instituicao_legislaturas (uuid, nome, instituicao_id, legislatura_id, data_inicio, data_fim, sinopse, created_at, updated_at) VALUES ('%s', %s, %d, %d, %s, %s, %s, '%s', '%s')",
+            "INSERT INTO instituicao_legislaturas (id, uuid, nome, instituicao_id, legislatura_id, data_inicio, data_fim, sinopse, created_at, updated_at) VALUES (%d, '%s', %s, %d, %d, %s, %s, %s, '%s', '%s')",
+            $this->id,
             $this->uuid,
             $this->nome !== null ? "'" . $this->nome . "'" : "NULL",
             $this->instituicaoId,

@@ -18,16 +18,16 @@ class Instituicao
     private $createdAt;
     private $updatedAt;
 
-    public function __construct()
+    public function __construct(int $id)
     {
+        $this->id = $id;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        $instance = new self();
-        $instance->id = $data['id'] ?? null;
+        $instance = new self($data['id'] ?? 0);
         $instance->uuid = $data['uuid'] ?? null;
         $instance->republicaId = $data['republica_id'] ?? null;
         $instance->nome = $data['nome'] ?? null;
@@ -70,7 +70,8 @@ class Instituicao
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO instituicoes (uuid, republica_id, nome, sigla, sinopse, responde_instituicao_id, entidade_juridica_id, nacional, created_at, updated_at) VALUES ('%s', %d, '%s', %s, %s, %s, %s, %d, '%s', '%s')",
+            "INSERT INTO instituicoes (id, uuid, republica_id, nome, sigla, sinopse, responde_instituicao_id, entidade_juridica_id, nacional, created_at, updated_at) VALUES (%d, '%s', %d, '%s', %s, %s, %s, %s, %d, '%s', '%s')",
+            $this->id,
             $this->uuid,
             $this->republicaId,
             $this->nome,

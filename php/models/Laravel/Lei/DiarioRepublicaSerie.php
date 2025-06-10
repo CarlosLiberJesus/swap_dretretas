@@ -35,12 +35,17 @@ class DiarioRepublicaSerie
     public static function all(): array
     {
         return [
-            self::create(['id' => 1, 'nome' => 'I Série', 'sinopse' => 'Relato fiel e completo do que ocorrer em cada reunião plenária.']),
-            self::create(['id' => 2, 'nome' => 'II Série-A', 'sinopse' => 'Textos dos decretos, resoluções e deliberações do Plenário, da Comissão Permanente, da Mesa e da Conferência de Líderes, dos projetos de revisão constitucional.']),
-            self::create(['id' => 3, 'nome' => 'II Série-B', 'sinopse' => 'Textos dos votos, interpelações, inquéritos parlamentares e requerimentos de apreciação de decretos-leis.']),
-            self::create(['id' => 4, 'nome' => 'II Série-C', 'sinopse' => 'Relatórios da atividade das comissões parlamentares nos termos do Regimento.']),
-            self::create(['id' => 5, 'nome' => 'II Série-D', 'sinopse' => 'Intervenções feitas por Deputados, em representação da Assembleia da República, em organizações internacionais, designadamente na União Interparlamentar.']),
-            self::create(['id' => 6, 'nome' => 'II Série-E', 'sinopse' => 'Despachos do Presidente da Assembleia e dos Vice-Presidentes.']),
+            self::create(['id' => 1, 'nome' => 'Série I', 'sinopse' => '']),
+            self::create(['id' => 2, 'nome' => 'Série II', 'sinopse' => '']),
+            self::create(['id' => 3, 'nome' => 'Série III', 'sinopse' => '']),
+            self::create(['id' => 4, 'nome' => 'Suplemento', 'sinopse' => '', 'serie_id' => 1]),
+            self::create(['id' => 5, 'nome' => 'Suplemento', 'sinopse' => '', 'serie_id' => 2]),
+            self::create(['id' => 6, 'nome' => 'Série I-A', 'sinopse' => '', 'serie_id' => 1]),
+            self::create(['id' => 7, 'nome' => 'Série II-A', 'sinopse' => 'Textos dos decretos, resoluções e deliberações do Plenário, da Comissão Permanente, da Mesa e da Conferência de Líderes, dos projetos de revisão constitucional.', 'serie_id' => 2]),
+            self::create(['id' => 8, 'nome' => 'Série II-B', 'sinopse' => 'Textos dos votos, interpelações, inquéritos parlamentares e requerimentos de apreciação de decretos-leis.', 'serie_id' => 2]),
+            self::create(['id' => 9, 'nome' => 'Série II-C', 'sinopse' => 'Relatórios da atividade das comissões parlamentares nos termos do Regimento.', 'serie_id' => 2]),
+            self::create(['id' => 10, 'nome' => 'Série II-D', 'sinopse' => 'Intervenções feitas por Deputados, em representação da Assembleia da República, em organizações internacionais, designadamente na União Interparlamentar.', 'serie_id' => 2]),
+            self::create(['id' => 11, 'nome' => 'Série II-E', 'sinopse' => 'Despachos do Presidente da Assembleia e dos Vice-Presidentes.', 'serie_id' => 2]),
         ];
     }
 

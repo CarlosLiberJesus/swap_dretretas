@@ -64,7 +64,8 @@ class InstituicaoDados
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO instituicao_dados (nif, certidao_permanente, instituicao_id, descricao, created_at, updated_at) VALUES (%s, %s, %d, '%s', '%s')",
+            "INSERT INTO instituicao_dados (id, nif, certidao_permanente, instituicao_id, descricao, created_at, updated_at) VALUES (%d, %s, %s, %d, '%s', '%s')",
+            $this->id,
             $this->nif !== null ? "'" . $this->nif . "'" : "NULL",
             $this->certidaoPermanente !== null ? "'" . $this->certidaoPermanente . "'" : "NULL",
             $this->instituicaoId,

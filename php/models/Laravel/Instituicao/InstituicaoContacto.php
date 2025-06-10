@@ -13,19 +13,20 @@ class InstituicaoContacto
     private $createdAt;
     private $updatedAt;
 
-    public function __construct(int $id, int $instituicaoId, int $contactoTipoId, string $contacto)
+    public function __construct(int $id)
     {
         $this->id = $id;
-        $this->instituicaoId = $instituicaoId;
-        $this->contactoTipoId = $contactoTipoId;
-        $this->contacto = $contacto;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        return new self($data['id'], $data['instituicao_id'], $data['contacto_tipo_id'], $data['contacto']);
+        $instituicaoContacto = new self($data['id'] ?? 0);
+        $instituicaoContacto->setInstituicaoId($data['instituicao_id'] ?? null);
+        $instituicaoContacto->setContactoTipoId($data['contacto_tipo_id'] ?? null);
+        $instituicaoContacto->setContacto($data['contacto'] ?? null);
+        return $instituicaoContacto;
     }
 
     public static function findById(\PDO $pdo, int $id): ?self

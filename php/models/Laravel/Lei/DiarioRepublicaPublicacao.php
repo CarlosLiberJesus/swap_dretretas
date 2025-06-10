@@ -183,4 +183,22 @@ class DiarioRepublicaPublicacao
 
         return $anexos;
     }
+
+    public function leis(\PDO $pdo): array
+    {
+        $stmt = $pdo->prepare("SELECT * FROM diario_republica_publicacao_leis WHERE dr_publicacao_id = ?");
+        $stmt->execute([$this->id]);
+        $leis = [];
+
+        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $leis[] = CidadaoAnexo::create($data);
+        }
+
+        return $leis;
+    }
+
+    public function serie(\PDO $pdo): ?DiarioRepublicaSerie
+    {
+        return DiarioRepublicaSerie::findById($pdo, $this->serieId);
+    }
 }

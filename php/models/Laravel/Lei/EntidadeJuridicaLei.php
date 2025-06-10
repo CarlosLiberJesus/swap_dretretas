@@ -12,7 +12,7 @@ class EntidadeJuridicaLei
     private $uuid;
     private $nome;
     private $entidadeJuridicaId;
-    private $lei;
+    private $leiId;
     private $createdAt;
     private $updatedAt;
 
@@ -29,7 +29,7 @@ class EntidadeJuridicaLei
         $instance->uuid = $data['uuid'] ?? null;
         $instance->nome = $data['nome'] ?? null;
         $instance->entidadeJuridicaId = $data['entidade_juridica_id'] ?? null;
-        $instance->lei = $data['lei_id'];
+        $instance->leiId = $data['lei_id'];
         $instance->createdAt = $data['created_at'] ?? $instance->createdAt;
         $instance->updatedAt = $data['updated_at'] ?? $instance->updatedAt;
 
@@ -64,11 +64,12 @@ class EntidadeJuridicaLei
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO entidade_juridica_leis (uuid, nome, entidade_juridica_id, lei_id, created_at, updated_at) VALUES ('%s', %s, %d, %d, '%s', '%s')",
+            "INSERT INTO entidade_juridica_leis (id, uuid, nome, entidade_juridica_id, lei_id, created_at, updated_at) VALUES (%d, '%s', %s, %d, %d, '%s', '%s')",
+            $this->id,
             $this->uuid,
             $this->nome !== null ? "'" . $this->nome . "'" : "NULL",
             $this->entidadeJuridicaId,
-            $this->lei->getId(),
+            $this->leiId,
             $this->createdAt,
             $this->updatedAt
         );
@@ -95,9 +96,9 @@ class EntidadeJuridicaLei
         return $this->entidadeJuridicaId;
     }
 
-    public function getLei(): ?Lei
+    public function getLeiId():  int
     {
-        return $this->lei;
+        return $this->leiId;
     }
 
     public function getCreatedAt(): string
@@ -130,9 +131,9 @@ class EntidadeJuridicaLei
         $this->entidadeJuridicaId = $entidadeJuridicaId;
     }
 
-    public function setLei(Lei $lei): void
+    public function setLei(int $leiId): void
     {
-        $this->lei = $lei;
+        $this->leiId = $leiId;
     }
 
     public function setCreatedAt(string $createdAt): void

@@ -89,7 +89,8 @@ class Concelho
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO concelhos (uuid, nome, codigo, distrito_id, params) VALUES ('%s', '%s', '%s', %d, %s)",
+            "INSERT INTO concelhos (id, uuid, nome, codigo, distrito_id, params) VALUES (%d, '%s', '%s', '%s', %d, %s)",
+            $this->id,
             $this->uuid,
             $this->nome,
             $this->codigo,

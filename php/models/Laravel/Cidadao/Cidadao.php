@@ -17,23 +17,24 @@ class Cidadao
     private $createdAt;
     private $updatedAt;
 
-    public function __construct()
+    public function __construct(int $id)
     {
+        $this->id = $id;
+        $this->nacional = true;
         $this->createdAt = date('Y-m-d H:i:s');
         $this->updatedAt = date('Y-m-d H:i:s');
     }
 
     public static function create(array $data): self
     {
-        $instance = new self();
-        $instance->id = $data['id'] ?? null;
+        $instance = new self($data['id'] ?? 0);
         $instance->uuid = $data['uuid'] ?? null;
         $instance->nome = $data['nome'] ?? null;
         $instance->dataNascimento = $data['data_nascimento'] ?? null;
         $instance->dataFalecimento = $data['data_falecimento'] ?? null;
         $instance->genero = $data['genero'] ?? null;
         $instance->freguesiaId = $data['freguesia_id'] ?? null;
-        $instance->nacional = $data['nacional'] ?? null;
+        $instance->nacional = $data['nacional'] ?? true;
         $instance->createdAt = $data['created_at'] ?? $instance->createdAt;
         $instance->updatedAt = $data['updated_at'] ?? $instance->updatedAt;
 
@@ -81,7 +82,8 @@ class Cidadao
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO cidadaos (uuid, nome, data_nascimento, data_falecimento, genero, freguesia_id, nacional, created_at, updated_at) VALUES ('%s', '%s', %s, %s, %s, %s, %d, '%s', '%s')",
+            "INSERT INTO cidadaos (id, uuid, nome, data_nascimento, data_falecimento, genero, freguesia_id, nacional, created_at, updated_at) VALUES (%d, '%s', '%s', %s, %s, %s, %s, %d, '%s', '%s')",
+            $this->id,
             $this->uuid,
             $this->nome,
             $this->dataNascimento !== null ? "'" . $this->dataNascimento . "'" : "NULL",
@@ -212,6 +214,19 @@ class Cidadao
     public function anexos(\PDO $pdo): array
     {
         $stmt = $pdo->prepare("SELECT * FROM cidadao_anexos WHERE cidadao_id = ?");
+        $stmt->execute([$this->id]);
+        $anexos = [];
+
+        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $anexos[] = CidadaoAnexo::create($data);
+        }
+
+        return $anexos;
+    }
+
+    public function cargos(\PDO $pdo): array
+    {
+        $stmt = $pdo->prepare("SELECT * FROM cidadao_cargos WHERE cidadao_id = ?");
         $stmt->execute([$this->id]);
         $anexos = [];
 

@@ -77,18 +77,6 @@ class LeiAnexo
         return null;
     }
 
-    public static function getDistinctNome(\PDO $pdo): array
-    {
-        $stmt = $pdo->query("SELECT DISTINCT nome FROM lei_anexos");
-        $nomes = [];
-
-        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $nomes[] = $data['nome'];
-        }
-
-        return $nomes;
-    }
-
     public static function all(\PDO $pdo): array
     {
         $stmt = $pdo->query("SELECT * FROM lei_anexos");
@@ -104,7 +92,8 @@ class LeiAnexo
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO lei_anexos (uuid, nome, lei_id, anexo_tipo_id, path, src, created_at, updated_at) VALUES ('%s', '%s', %d, %d, %s, %s, '%s', '%s')",
+            "INSERT INTO lei_anexos (uuid, nome, lei_id, anexo_tipo_id, path, src, created_at, updated_at) VALUES (%d, '%s', '%s', %d, %d, %s, %s, '%s', '%s')",
+            $this->id,
             $this->uuid,
             $this->nome,
             $this->leiId,

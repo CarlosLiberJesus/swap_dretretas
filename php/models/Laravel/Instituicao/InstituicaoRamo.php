@@ -56,7 +56,8 @@ class InstituicaoRamo
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO instituicao_ramos (uuid, tipo, descricao, created_at, updated_at) VALUES ('%s', '%s', '%s', '%s', '%s')",
+            "INSERT INTO instituicao_ramos (id, uuid, tipo, descricao, created_at, updated_at) VALUES (%d, '%s', '%s', '%s', '%s', '%s')",
+            $this->id,
             $this->uuid,
             $this->tipo,
             $this->descricao,

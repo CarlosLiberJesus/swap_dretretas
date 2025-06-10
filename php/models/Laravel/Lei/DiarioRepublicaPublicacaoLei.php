@@ -3,7 +3,8 @@
 declare(strict_types=1);
 
 namespace Carlos\Organize\Model\Laravel\Lei;
-
+//https://diariodarepublica.pt/dr/detalhe/diario-republica/32-2025-907468769
+// sinopse na lei
 class DiarioRepublicaPublicacaoLei
 {
     private $id;

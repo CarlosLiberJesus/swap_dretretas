@@ -66,18 +66,6 @@ class EntidadeJuridicaAnexo
         return null;
     }
 
-    public static function getDistinctNome(\PDO $pdo): array
-    {
-        $stmt = $pdo->query("SELECT DISTINCT nome FROM entidade_juridica_anexos");
-        $nomes = [];
-
-        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $nomes[] = $data['nome'];
-        }
-
-        return $nomes;
-    }
-
     public function toSqlInsert(): string
     {
         return sprintf(

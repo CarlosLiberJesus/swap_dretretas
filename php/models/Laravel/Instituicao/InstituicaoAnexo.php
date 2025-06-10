@@ -69,7 +69,8 @@ class InstituicaoAnexo
     public function toSqlInsert(): string
     {
         return sprintf(
-            "INSERT INTO instituicao_anexos (uuid, nome, instituicao_id, anexo_tipo_id, path, src, created_at, updated_at) VALUES ('%s', '%s', %d, %d, %s, %s, '%s', '%s')",
+            "INSERT INTO instituicao_anexos (id, uuid, nome, instituicao_id, anexo_tipo_id, path, src, created_at, updated_at) VALUES (%d, '%s', '%s', %d, %d, %s, %s, '%s', '%s')",
+            $this->id,
             $this->uuid,
             $this->nome,
             $this->instituicaoId,

@@ -72,18 +72,6 @@ class Lei
         return null;
     }
 
-    public static function getDistinctNome(\PDO $pdo): array
-    {
-        $stmt = $pdo->query("SELECT DISTINCT nome_completo FROM leis");
-        $nomes = [];
-
-        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            $nomes[] = $data['nome_completo'];
-        }
-
-        return $nomes;
-    }
-
     public static function all(\PDO $pdo): array
     {
         $stmt = $pdo->query("SELECT * FROM leis");
@@ -260,4 +248,19 @@ class Lei
 
         return $anexos;
     }
+
+    public function adendas(\PDO $pdo): array
+    {
+        $stmt = $pdo->prepare("SELECT * FROM lei_adendas WHERE lei_original_id = ?");
+        $stmt->execute([$this->id]);
+        $adendas = [];
+
+        while ($data = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $adendas[] = LeiAdenda::create($data);
+        }
+
+        return $adendas;
+    }
+
+    //TODO: Implementar LeiEmissores
 }

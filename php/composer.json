@@ -4,7 +4,8 @@
   "type": "metapackage",
   "require": {
     "guzzlehttp/guzzle": "^7.9",
-    "doctrine/dbal": "^3.0"
+    "doctrine/dbal": "^3.0",
+    "ramsey/uuid": "^4.7"
   },
   "license": "MIT",
   "autoload": {
